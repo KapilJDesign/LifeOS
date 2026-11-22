@@ -1,0 +1,13 @@
+import { chromium } from "playwright-core";
+const url = process.argv[2] || "http://127.0.0.1:8765/index.html";
+const browser = await chromium.launch({ channel: "chrome" });
+const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+const errs = [];
+page.on("console", (m) => { if (["error", "warning"].includes(m.type())) errs.push(m.type() + ": " + m.text()); });
+page.on("pageerror", (e) => errs.push("PAGEERROR: " + e.message + "\n" + (e.stack || "").split("\n").slice(0, 3).join("\n")));
+await page.goto(url);
+await page.waitForTimeout(800);
+console.log("title:", await page.title());
+console.log("view html length:", (await page.$eval("#view", (e) => e.innerHTML.length)));
+console.log(errs.join("\n") || "no errors");
+await browser.close();

@@ -1,0 +1,8 @@
+{
+  "name": "lifeos-design-v1-tools",
+  "private": true,
+  "type": "module",
+  "description": "Screenshot + QA scripts for the Life OS design prototype. Not part of the prototype itself.",
+  "scripts": { "shots": "node capture-screens.mjs" },
+  "devDependencies": { "playwright-core": "^1.65.1" }
+}

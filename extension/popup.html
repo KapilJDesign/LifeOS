@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Save to Life OS</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="popup">
+      <header class="header">
+        <img src="icons/icon-32.png" alt="" width="20" height="20" />
+        <h1>Save to Life OS</h1>
+      </header>
+
+      <section class="page" aria-label="Page to save">
+        <p id="page-title" class="page-title">Loading page…</p>
+        <p id="page-url" class="page-url"></p>
+      </section>
+
+      <section id="selection-block" class="selection" hidden>
+        <p class="label">Selected text</p>
+        <blockquote id="selection-text"></blockquote>
+      </section>
+
+      <label class="label" for="note">Add a note (optional)</label>
+      <textarea id="note" rows="3" placeholder="Why does this matter?"></textarea>
+
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+
+      <div class="actions">
+        <button id="save" type="button" class="primary" disabled>Save to Life OS</button>
+        <button id="settings" type="button" class="link">Settings</button>
+      </div>
+    </main>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

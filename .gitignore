@@ -1,0 +1,25 @@
+
+# --- Deal-on-a-Page structure (reference artifacts; not published) ---
+.playwright-mcp/
+.gif-build/
+3_findings/
+2_version_History/
+1_Updates/media/
+0_Requirements/**/*.png
+0_Requirements/**/*.jpg
+0_Requirements/**/*.jpeg
+0_Requirements/**/*.gif
+
+# --- Life OS app (Vite / Node) ---
+node_modules/
+dist/
+dist-ssr/
+*.local
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+*.tsbuildinfo
+
+.impeccable/

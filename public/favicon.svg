@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Life OS">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7B5BF3" />
+      <stop offset="1" stop-color="#361B9E" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#g)" />
+  <g stroke="#fff" stroke-width="2.2" stroke-linecap="round">
+    <path d="M32 32 32 13M32 32 48.2 42M32 32 15.8 42" fill="none" />
+  </g>
+  <g fill="#fff">
+    <circle cx="32" cy="32" r="7.4" />
+    <circle cx="32" cy="13" r="4.2" />
+    <circle cx="48.2" cy="42" r="4.2" />
+    <circle cx="15.8" cy="42" r="4.2" />
+  </g>
+</svg>

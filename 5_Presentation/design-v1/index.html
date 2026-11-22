@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#f4f2ed" />
+  <title>Life OS</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='10' fill='%235b3df5'/%3E%3Ccircle cx='16' cy='16' r='7.2' fill='none' stroke='white' stroke-width='2.4'/%3E%3Ccircle cx='22.3' cy='11.2' r='3.1' fill='white'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="tokens.css" />
+  <link rel="stylesheet" href="app.css" />
+  <link rel="stylesheet" href="screens.css" />
+  <script>
+    /* Apply the saved theme before first paint to avoid a flash. */
+    (function () {
+      try {
+        var s = JSON.parse(localStorage.getItem("lifeos.proto.v1") || "{}");
+        var q = new URLSearchParams((location.hash.split("?")[1] || "") + "&" + location.search.slice(1));
+        var pref = q.get("theme") || s.theme || "system";
+        var dark = pref === "dark" || (pref === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
+        document.documentElement.dataset.theme = dark ? "dark" : "light";
+        if (q.get("theme")) { s.theme = pref; localStorage.setItem("lifeos.proto.v1", JSON.stringify(s)); }
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="app" id="app">
+    <aside class="sidebar" id="sidebar" aria-label="Life OS"></aside>
+    <div class="stage" id="stage">
+      <div class="offline-bar" id="offlineBar" role="status" hidden>
+        <span class="ob-ic" aria-hidden="true"></span>
+        <span>You are offline. Captures are saved on this device and will be organised when you reconnect.</span>
+      </div>
+      <header class="topbar" id="topbar"></header>
+      <div class="stage-row">
+        <main class="main" id="main" tabindex="-1"><div class="view" id="view"></div></main>
+        <aside class="askrail" id="askRail" aria-label="Ask your knowledge" hidden></aside>
+      </div>
+    </div>
+    <nav class="bottomnav" id="bottomnav" aria-label="Primary"></nav>
+  </div>
+  <div class="toasts" id="toasts" role="status" aria-live="polite" aria-atomic="false"></div>
+
+  <script src="icons.js"></script>
+  <script src="art.js"></script>
+  <script src="data.js"></script>
+  <script src="core.js"></script>
+  <script src="capture.js"></script>
+  <script src="screens.js"></script>
+  <script src="explore.js"></script>
+  <script src="graph.js"></script>
+  <script src="chat.js"></script>
+  <script src="more.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
