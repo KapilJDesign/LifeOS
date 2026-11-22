@@ -154,29 +154,47 @@ await p.keyboard.press("Escape");
 ok(p.errs.length === 0, "desktop: no console errors " + p.errs.join(" | "));
 await p.context().close();
 
-/* ---------------- first-run onboarding ---------------- */
+/* ---------------- first-run onboarding (8 animated steps) ---------------- */
+const stepHash = (n) => "#/onboarding?step=" + n;
+const next = async (pg) => { await pg.click("#obNext"); await pg.waitForTimeout(350); };
 p = await fresh({ width: 390, height: 844 }, "#/home", { firstRun: true });
 ok((await hash(p)).startsWith("#/onboarding"), "onboarding: first visit to Home redirects");
-ok(!(await p.isVisible("#bottomnav")), "onboarding: app shell hidden");
-await p.click('[data-ob="next"]'); await p.waitForTimeout(300);
-ok((await hash(p)).includes("step=1") && (await p.isVisible("#obText")), "onboarding: step 2 shows the capture field");
-ok(await p.isVisible("#obNext") && (await p.textContent("#obNext")).trim() === "Skip for now", "onboarding: capture step can be skipped");
-await p.click("#obSave"); await p.waitForSelector(".ob-card", { timeout: 9000 });
-ok((await p.textContent(".ob-card")).includes("Build an AI agent"), "onboarding: first capture is organised");
-ok((await p.textContent("#obNext")).trim() === "Continue", "onboarding: continue after saving");
-await p.click("#obNext"); await p.waitForTimeout(300);
-ok(await p.isVisible('[data-tabs="obd"]'), "onboarding: save-from-anywhere step");
-await p.click('[data-tab="desk"]'); await p.waitForTimeout(150);
-ok(await p.isVisible("#obd-p-desk"), "onboarding: device tabs switch");
-await p.click("#obClip"); ok((await p.getAttribute("#obClip", "aria-checked")) === "false", "onboarding: clipboard switch toggles");
-await p.click("#obNext"); await p.waitForTimeout(300);
-await p.click('.ob-topic[data-topic="design"]'); ok((await p.getAttribute('.ob-topic[data-topic="design"]', "aria-pressed")) === "true", "onboarding: topic toggles on");
-await p.click('[data-ob="back"]'); await p.waitForTimeout(250);
-ok((await hash(p)).includes("step=2"), "onboarding: back goes to previous step");
-await p.click("#obNext"); await p.waitForTimeout(250);
-ok((await p.getAttribute('.ob-topic[data-topic="design"]', "aria-pressed")) === "true", "onboarding: picks survive navigation");
-await p.click("#obNext"); await p.waitForTimeout(500);
-ok((await hash(p)).startsWith("#/home"), "onboarding: finish lands on Home");
+ok(!(await p.isVisible("#bottomnav")) && !(await p.isVisible("#topbar")), "onboarding: app shell hidden");
+ok(await p.isVisible("#obBg"), "onboarding: backdrop present");
+const heads = ["finally understood", "five seconds", "organises itself", "find each other", "receipts", "what you know", "anywhere", "want to keep"];
+for (let i = 0; i < 8; i++) {
+  if (i > 0) await next(p);
+  ok(((await hash(p)).includes("step=" + i) || (i === 0 && (await hash(p)).startsWith("#/onboarding"))) && ((await p.textContent("#obH")).replace(/\s+/g, " ")).includes(heads[i]) && (await p.isVisible(".sc")), "onboarding: step " + (i + 1) + " renders its scene");
+  if (i === 2) {
+    await p.click('[data-oc="1"]'); await p.waitForTimeout(500);
+    ok(((await p.textContent(".oc-t")) || "").includes("weekly recall quiz") && (await p.getAttribute('[data-oc="1"]', "aria-pressed")) === "true", "onboarding: organise examples switch");
+    await p.click('[data-oc="2"]'); await p.waitForTimeout(400);
+    ok(((await p.textContent(".oc-t")) || "").includes("Design review"), "onboarding: meeting example");
+  }
+  if (i === 6) {
+    ok(await p.isVisible(".ob-seg"), "onboarding: device tabs shown");
+    await p.click('[data-dev="ios"]'); await p.waitForTimeout(300);
+    ok(await p.isVisible("#o7sheet, .sheet7") || (await p.$(".sheet7")) !== null, "onboarding: iPhone scene (share sheet)");
+    ok(!(await p.isHidden("#obNote")), "onboarding: iPhone limitation note shown");
+    await p.click('[data-dev="desk"]'); await p.waitForTimeout(300);
+    ok((await p.$(".bw")) !== null && (await p.isHidden("#obNote")), "onboarding: desktop scene (browser extension)");
+    await p.click("#obClip"); ok((await p.getAttribute("#obClip", "aria-checked")) === "false", "onboarding: clipboard switch toggles");
+  }
+  if (i === 7) {
+    await p.click('.tl[data-topic="design"]'); await p.waitForTimeout(700);
+    ok((await p.getAttribute('.tl[data-topic="design"]', "aria-pressed")) === "true", "onboarding: topic toggles on");
+    ok((await p.textContent("#obHint")).includes("Product Design"), "onboarding: hint names the pick");
+    ok((await p.$eval("#obTiles .tl", (t) => t.dataset.topic)) === "design", "onboarding: picked topic moves first");
+  }
+}
+await p.click('[data-ob="back"]'); await p.waitForTimeout(350);
+ok((await hash(p)).includes("step=6"), "onboarding: back goes to previous step");
+await p.keyboard.press("ArrowRight"); await p.waitForTimeout(350);
+ok((await hash(p)).includes("step=7"), "onboarding: arrow key goes forward");
+ok((await p.getAttribute('.tl[data-topic="design"]', "aria-pressed")) === "true", "onboarding: picks survive navigation");
+await p.click("#obNext"); await p.waitForTimeout(900);
+ok((await hash(p)).startsWith("#/home") && (await p.isVisible("#bottomnav")), "onboarding: finish lands on Home");
+ok((await p.$("#obBg")) === null, "onboarding: backdrop removed after finishing");
 ok((await p.textContent(".colls .coll-n")).includes("Product Design"), "onboarding: chosen topic is first on Home");
 await p.reload(); await p.waitForTimeout(500);
 ok((await hash(p)).startsWith("#/home"), "onboarding: not shown again after finishing");
@@ -184,7 +202,7 @@ ok(p.errs.length === 0, "onboarding: no console errors " + p.errs.join(" | "));
 await p.context().close();
 
 p = await fresh({ width: 390, height: 844 }, "#/home", { firstRun: true });
-await p.click('[data-ob="skip"]'); await p.waitForTimeout(400);
+await p.click('[data-ob="skip"]'); await p.waitForTimeout(500);
 ok((await hash(p)).startsWith("#/home") && (await p.isVisible("#bottomnav")), "onboarding: skip goes straight to Home");
 await p.goto(BASE + "#/settings"); await p.waitForTimeout(300);
 await p.click('a[href="#/onboarding"]'); await p.waitForTimeout(300);
@@ -192,8 +210,22 @@ ok((await hash(p)).startsWith("#/onboarding"), "onboarding: replay from Settings
 await p.context().close();
 
 p = await fresh({ width: 1440, height: 900 }, "#/home", { firstRun: true });
-ok(await p.isVisible(".ob-visual") && !(await p.isVisible("#sidebar")), "onboarding: desktop two-column, no sidebar");
+ok(await p.isVisible(".ob-stage") && !(await p.isVisible("#sidebar")), "onboarding: desktop two-column, no sidebar");
+const colsOk = await p.evaluate(() => { const c = document.querySelector(".ob-copy").getBoundingClientRect(), s = document.querySelector(".ob-stage").getBoundingClientRect(); return c.right <= s.left + 2 && Math.abs(s.width - s.height) < 2; });
+ok(colsOk, "onboarding: desktop copy left, square stage right");
 await p.context().close();
+
+/* reduced motion: nothing plays and the finished picture is shown */
+{
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: "reduce" });
+  const rp = await ctx.newPage(); rp.errs = [];
+  rp.on("pageerror", (e) => rp.errs.push(e.message));
+  await rp.goto(BASE + "#/onboarding?step=1"); await rp.waitForTimeout(500);
+  const finished = await rp.evaluate(() => { const t = document.querySelector(".ph-toast"), r = document.querySelector(".ph-row"); return getComputedStyle(t).opacity === "0" && getComputedStyle(r).opacity === "1" && document.getAnimations().filter((a) => a.effect && a.effect.target && a.effect.target.closest && a.effect.target.closest(".sc")).length === 0; });
+  ok(finished, "onboarding: reduced motion shows the finished picture and plays nothing");
+  ok(rp.errs.length === 0, "onboarding: reduced motion has no errors");
+  await ctx.close();
+}
 await browser.close();
 
 console.log(fails ? `\n${fails} FAILED` : "\nAll flows pass");
