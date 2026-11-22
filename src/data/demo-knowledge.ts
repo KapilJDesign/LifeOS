@@ -36,6 +36,10 @@ const SOURCE_PLATFORM: Record<KnowledgeItem["sourceType"], KnowledgeItem["platfo
   instagram: "instagram",
   website: "website",
   podcast: "podcast",
+  meeting: "calendar",
+  email: "email",
+  call: "phone",
+  health: "health",
 };
 
 export function createDemoKnowledge(now: Date = new Date()): DemoKnowledge {

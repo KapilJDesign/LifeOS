@@ -13,6 +13,7 @@ The original brief treats the browser extension, share sheet and conversational 
 | Retrieval | Local text search | Local search plus a chat that returns consolidated answers with citations to saved items |
 | Consumption | Swipeable cards, graph, infographics | Same, plus swipe forward and back through cards, a visible history, and progress tracking so users can see what they have revisited |
 | Backend | Next.js API routes, LocalStorage | No real backend now. A mock service layer behind clean interfaces, and a written architecture for the real backend |
+| Product scope | Personal knowledge and second brain | Second brain for the whole day. Meetings, emails, calls and health entries are items in the same model, so capture, processing, graph, search and Ask work on them unchanged. Home becomes **Today** (schedule, up to three priorities, a quiet health strip). No new tabs: the Library gets type filters, and connections (calendar, email, calls, health) live in Settings. Real connectors need OAuth and the backend, so the prototype uses sample data |
 
 Nothing else in the original brief changes. The loop Capture → Process → Structure → Connect → Visualise → Explore → Retrieve → Share remains the definition of done.
 
