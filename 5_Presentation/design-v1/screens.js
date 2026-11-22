@@ -140,7 +140,7 @@
               </div>
             </article>
             <div class="disc-pair">
-              <a class="mini" href="#/graph/${cA.id}" data-tone="violet"><span class="mini-ic">${LO.icon("graph", 20)}</span><span class="mini-b"><span class="mini-k">A connection to explore</span><span class="mini-t">${esc(cA.name)} inspired ${esc(cB.name)}</span></span></a>
+              <a class="mini" href="#/graph/${cA.id}" data-tone="mint"><span class="mini-ic">${LO.icon("graph", 20)}</span><span class="mini-b"><span class="mini-k">A connection to explore</span><span class="mini-t">${esc(cA.name)} inspired ${esc(cB.name)}</span></span></a>
               <a class="mini" href="#/item/${unseen.id}" data-tone="${LO.tone(unseen)}"><span class="mini-ic">${LO.icon("history", 20)}</span><span class="mini-b"><span class="mini-k">Not opened in ${Math.max(1, Math.round((Date.now() - unseen.createdAt) / 864e5))} days</span><span class="mini-t">${esc(unseen.title)}</span></span></a>
             </div>
           </section>
@@ -249,7 +249,7 @@
     const state = LO.parseHash().q.state;
     if (state === "loading") return { n: 0, html: `<div class="skel-list" aria-busy="true" aria-label="Loading your library">${Array.from({ length: 5 }, () => `<div class="row skel-row"><span class="thumb skel-box"></span><span class="row-body"><i class="shimmer-line"></i><i class="shimmer-line s"></i></span></div>`).join("")}</div>` };
     if (!list.length) {
-      return { n: 0, html: `<div class="empty"><div class="empty-art" data-tone="violet">${LO.art("research")}</div><h2 class="empty-h">${lib.q ? `Nothing matches \u201C${esc(lib.q)}\u201D` : "Nothing here yet"}</h2><p class="empty-p">${lib.q ? "Try fewer words, or ask your knowledge a question instead." : "Capture a thought, a link or a voice note and it will show up here, already organised."}</p><div class="empty-a">${lib.q ? `<button class="btn primary" type="button" data-lib="ask">${LO.icon("spark", 18)}Ask instead</button>` : `<button class="btn primary" type="button" data-act="capture">${LO.icon("plus", 18)}Capture something</button>`}<button class="btn subtle" type="button" data-lib="clear">Clear filters</button></div></div>` };
+      return { n: 0, html: `<div class="empty"><div class="empty-art" data-tone="mint">${LO.art("research")}</div><h2 class="empty-h">${lib.q ? `Nothing matches \u201C${esc(lib.q)}\u201D` : "Nothing here yet"}</h2><p class="empty-p">${lib.q ? "Try fewer words, or ask your knowledge a question instead." : "Capture a thought, a link or a voice note and it will show up here, already organised."}</p><div class="empty-a">${lib.q ? `<button class="btn primary" type="button" data-lib="ask">${LO.icon("spark", 18)}Ask instead</button>` : `<button class="btn primary" type="button" data-act="capture">${LO.icon("plus", 18)}Capture something</button>`}<button class="btn subtle" type="button" data-lib="clear">Clear filters</button></div></div>` };
     }
     let html = "";
     if (lib.view === "grid") html = `<div class="ggrid">${list.map((i) => gridHTML(i, lib.q, i.id === selId)).join("")}</div>`;
@@ -278,7 +278,7 @@
         </div>
         <div class="lib-results" id="libResults" aria-live="polite">${res.html}</div>
       </section>
-      <section class="lib-detail" id="libDetail" aria-label="Item details">${detailHTMLStr || `<div class="pane-empty"><div class="pane-empty-art" data-tone="violet">${LO.art("network")}</div><h2>Pick something to read</h2><p>Your notes open here, with their summary, key insights and connections.</p></div>`}</section>
+      <section class="lib-detail" id="libDetail" aria-label="Item details">${detailHTMLStr || `<div class="pane-empty"><div class="pane-empty-art" data-tone="mint">${LO.art("network")}</div><h2>Pick something to read</h2><p>Your notes open here, with their summary, key insights and connections.</p></div>`}</section>
     </div>`;
   }
 
@@ -495,7 +495,7 @@
         <section class="set-sec" aria-labelledby="s-ap"><h2 class="sec-h" id="s-ap">Appearance</h2>
           <div class="set-card">
             <div class="set-row col"><p class="set-l" id="thL">Theme</p>
-              <div class="theme-pick" role="radiogroup" aria-labelledby="thL">${[["system", "System", "desktop"], ["light", "Light", "sun"], ["dark", "Dark", "moon"]].map(([k, l, ic]) => `<button type="button" role="radio" aria-checked="${s.theme === k}" data-pick="${k}" class="tp" data-tone="${k === "dark" ? "ink" : "violet"}"><span class="tp-swatch tp-${k}"><i></i><i></i><i></i></span><span class="tp-l">${LO.icon(ic, 16)}${l}</span></button>`).join("")}</div>
+              <div class="theme-pick" role="radiogroup" aria-labelledby="thL">${[["system", "System", "desktop"], ["light", "Light", "sun"], ["dark", "Dark", "moon"]].map(([k, l, ic]) => `<button type="button" role="radio" aria-checked="${s.theme === k}" data-pick="${k}" class="tp" data-tone="${k === "dark" ? "ink" : "mint"}"><span class="tp-swatch tp-${k}"><i></i><i></i><i></i></span><span class="tp-l">${LO.icon(ic, 16)}${l}</span></button>`).join("")}</div>
               <p class="set-d">High contrast follows your operating system. Turn on a contrast theme in Windows or macOS and Life OS adapts.</p></div>
             ${sw("swMotion", "Reduce motion", "Replace sliding and flying animations with simple fades. Follows your system setting automatically.", s.reduceMotion)}
           </div></section>

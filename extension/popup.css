@@ -1,21 +1,23 @@
 :root {
   color-scheme: light dark;
-  --bg: #faf8f5;
-  --fg: #16141c;
-  --muted: #5a5667;
-  --border: #d9d4cc;
-  --brand: #5b33e8;
-  --brand-fg: #ffffff;
+  --bg: #f2f5f3;
+  --fg: #0f1413;
+  --muted: #55625c;
+  --border: #c7d4ce;
+  --brand: #70a995;
+  --brand-fg: #0f1413;
+  --focus: #4e8873;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #1a1920;
-    --fg: #f4f2f8;
-    --muted: #ada9b8;
-    --border: #3a3844;
-    --brand: #8b71f5;
-    --brand-fg: #0b0623;
+    --bg: #0f1413;
+    --fg: #eef5f2;
+    --muted: #93a29b;
+    --border: #2a3330;
+    --brand: #70a995;
+    --brand-fg: #0f1413;
+    --focus: #70a995;
   }
 }
 
@@ -96,7 +98,7 @@ input[type="url"] {
 
 input[type="url"]:focus-visible,
 input[type="checkbox"]:focus-visible {
-  outline: 2px solid var(--brand);
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 
@@ -119,7 +121,7 @@ textarea {
 
 textarea:focus-visible,
 button:focus-visible {
-  outline: 2px solid var(--brand);
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 

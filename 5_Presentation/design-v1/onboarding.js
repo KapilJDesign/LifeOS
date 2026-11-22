@@ -13,11 +13,11 @@
   const reduced = () => !!LO.state.reduceMotion || matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const STEPS = [
-    { tone: "violet", eyebrow: "Welcome", h: "Everything you save, *finally understood.*", p: "Videos, reels, articles, voice notes, meetings and emails. Life OS pulls them into one place and makes sense of them for you." },
+    { tone: "mint", eyebrow: "Welcome", h: "Everything you save, *finally understood.*", p: "Videos, reels, articles, voice notes, meetings and emails. Life OS pulls them into one place and makes sense of them for you." },
     { tone: "steel", eyebrow: "Capture", h: "Save it in *five seconds.*", p: "Share a link from your phone, click once in Chrome, paste it, or say it out loud. No folders, no forms." },
     { tone: "sand", eyebrow: "Organise", h: "No folders. | *It organises itself.*", p: "Title, summary, topics, people and next steps appear on their own. You can edit any of it." },
     { tone: "rose", eyebrow: "Connect", h: "Ideas *find each other.*", p: "Every new save is linked to what you already know, so patterns show up without you hunting for them." },
-    { tone: "violet", eyebrow: "Ask", h: "Ask anything. | *Get answers with receipts.*", p: "Questions are answered from your own notes, and every claim links back to the item it came from." },
+    { tone: "mint", eyebrow: "Ask", h: "Ask anything. | *Get answers with receipts.*", p: "Questions are answered from your own notes, and every claim links back to the item it came from." },
     { tone: "steel", eyebrow: "Rediscover", h: "Swipe through *what you know.*", p: "Short visual cards bring old ideas back at the right moment. Go back any time, and see what you have already revisited." },
     { tone: "sand", eyebrow: "Set up", h: "Save from *anywhere.*", p: "Set it up once on the device you use most. It takes under a minute, and you can skip it for now." },
     { tone: "rose", eyebrow: "Make it yours", h: "What do you *want to keep?*", p: "Pick any that fit and Home will lead with them. You can change this later." }
@@ -76,13 +76,13 @@
 
   /* ================= scene 1: everything you save, in one place ================= */
   const WALL = [
-    { t: "Build an AI agent in 20 minutes", s: "youtube", n: "YouTube", a: "agents", tone: "violet" },
+    { t: "Build an AI agent in 20 minutes", s: "youtube", n: "YouTube", a: "agents", tone: "mint" },
     { t: "Three prompts that make AI answers sharper", s: "instagram", n: "Instagram", a: "context", tone: "steel" },
     { t: "Why design reviews need a checklist", s: "website", n: "Article", a: "quality", tone: "sand" },
     { t: "A weekly recall quiz", s: "voice", n: "Voice note", a: "journal", tone: "rose" },
     { t: "Design review with Arjun", s: "meeting", n: "Meeting", a: "design", tone: "steel" },
     { t: "Re: pricing for the pilot", s: "email", n: "Email", a: "saas", tone: "sand" },
-    { t: "What I learned this week", s: "journal", n: "Journal", a: "network", tone: "violet" }
+    { t: "What I learned this week", s: "journal", n: "Journal", a: "network", tone: "mint" }
   ];
   const SCAT = [[-31, -27, -9], [31, -30, 8], [-37, 6, -6], [37, 4, 9], [-26, 36, 7], [27, 38, -7], [0, -4, 3]];
   const stackT = (i) => `translate(${(i - 3) * 3.4}cqmin, ${5 + Math.abs(i - 3) * 1.5}cqmin) rotate(${(i - 3) * 4.5}deg) scale(1.28)`;
@@ -110,7 +110,7 @@
         <div class="ph-field"><span class="ph-ic">${LO.icon("link", 14)}</span><span class="ph-url"><span id="o2url">youtu.be/a1b2</span></span><span class="ph-save" id="o2save">Save</span></div>
         <p class="ph-l">Inbox</p>
         <div class="ph-list">
-          <div class="ph-row"><span class="ph-th" data-tone="violet">${art("agents")}</span><span class="ph-rb"><span class="ph-rt" id="o2real">Build an AI agent in 20 minutes</span><span class="ph-sk" id="o2sk"><i></i><i></i></span><span class="ph-tags" id="o2tags">${tag("AI Agents")}${tag("Tool Calling")}</span></span></div>
+          <div class="ph-row"><span class="ph-th" data-tone="mint">${art("agents")}</span><span class="ph-rb"><span class="ph-rt" id="o2real">Build an AI agent in 20 minutes</span><span class="ph-sk" id="o2sk"><i></i><i></i></span><span class="ph-tags" id="o2tags">${tag("AI Agents")}${tag("Tool Calling")}</span></span></div>
           <div class="ph-row dim"><span class="ph-th" data-tone="sand">${art("quality")}</span><span class="ph-rb"><span class="ph-rt">Why design reviews need a checklist</span><span class="ph-rs">Article · 2 h ago</span></span></div>
           <div class="ph-row dim"><span class="ph-th" data-tone="rose">${art("journal")}</span><span class="ph-rb"><span class="ph-rt">A weekly recall quiz</span><span class="ph-rs">Voice note · yesterday</span></span></div>
         </div>
@@ -142,7 +142,7 @@
 
   /* ================= scene 3: it organises itself ================= */
   const KINDS = [
-    { pill: "Videos", type: "Video", ti: "video", tone: "violet", a: "agents", s: "youtube", src: "youtube.com", title: "Build an AI agent in 20 minutes", meta: "21 min video", sum: "Start with two precisely described tools, then let the agent check its own work.", chips: [["AI Agents", "c"], ["Tool Calling", "c"], ["AI & Tech", "t"], ["try this weekend", "i"]], act: "Explore agent frameworks", when: "Sat" },
+    { pill: "Videos", type: "Video", ti: "video", tone: "mint", a: "agents", s: "youtube", src: "youtube.com", title: "Build an AI agent in 20 minutes", meta: "21 min video", sum: "Start with two precisely described tools, then let the agent check its own work.", chips: [["AI Agents", "c"], ["Tool Calling", "c"], ["AI & Tech", "t"], ["try this weekend", "i"]], act: "Explore agent frameworks", when: "Sat" },
     { pill: "Voice notes", type: "Voice note", ti: "mic", tone: "rose", a: "journal", s: "voice", src: "Voice note", title: "A weekly recall quiz", meta: "0:42 voice note", sum: "Once a week, ask me one question about something I saved last month.", chips: [["Spaced repetition", "c"], ["Knowledge Systems", "c"], ["Personal", "t"], ["product idea", "i"]], act: "Sketch the quiz flow", when: "Mon" },
     { pill: "Meetings", type: "Meeting", ti: "calendar", tone: "steel", a: "design", s: "meeting", src: "Calendar", title: "Design review with Arjun", meta: "30 min · 3 people", sum: "Agreed to add a visual quality checklist before every review.", chips: [["Arjun", "p"], ["Meera", "p"], ["Design Quality", "c"], ["follow up", "i"]], act: "Send the checklist", when: "Fri" }
   ];
@@ -231,7 +231,7 @@
 
   /* ================= scene 5: ask, with receipts ================= */
   const SRC5 = [
-    { t: "Build an AI agent in 20 minutes", s: "youtube", n: "YouTube", a: "agents", tone: "violet" },
+    { t: "Build an AI agent in 20 minutes", s: "youtube", n: "YouTube", a: "agents", tone: "mint" },
     { t: "Three prompts that make AI answers sharper", s: "instagram", n: "Instagram", a: "context", tone: "steel" },
     { t: "Note: keep the context short", s: "text", n: "Note · March", a: "network", tone: "sand" }
   ];
@@ -262,7 +262,7 @@
 
   /* ================= scene 6: swipe through what you know ================= */
   const DECK = [
-    { t: "Two tools beat ten", i: "A small agent with two well-described tools beats a big one with ten vague ones.", topic: "AI & Tech", a: "agents", tone: "violet", s: "youtube", n: "YouTube" },
+    { t: "Two tools beat ten", i: "A small agent with two well-described tools beats a big one with ten vague ones.", topic: "AI & Tech", a: "agents", tone: "mint", s: "youtube", n: "YouTube" },
     { t: "Say who it is for", i: "Name the reader, what good looks like and what to leave out.", topic: "AI & Tech", a: "context", tone: "steel", s: "instagram", n: "Instagram" },
     { t: "Polish is a habit", i: "The last ten percent is states, details and care that earn trust.", topic: "Design", a: "quality", tone: "sand", s: "website", n: "Article" },
     { t: "Ask before you automate", i: "Do it by hand three times first, then decide what is worth a workflow.", topic: "Business", a: "automation", tone: "rose", s: "text", n: "Note" }

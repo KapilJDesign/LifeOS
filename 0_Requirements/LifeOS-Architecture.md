@@ -124,7 +124,7 @@ LifeOS/
       App.tsx                   FluentProvider (theme), router, placeholder pages
       CaptureRoute.tsx          Functional /capture deep-link entry (unstyled)
       routes.ts                 Route table (Home, Explore, Capture, Graph, Library, Ask, Item)
-    theme/index.ts              Violet/indigo brand ramp; light, dark, high-contrast themes; resolveThemeName
+    theme/index.ts              Arctic Mint brand ramp on Carbon and mint-tinted neutrals; light, dark, high-contrast themes; resolveThemeName
     types/knowledge.ts          Domain types (section 4)
     data/demo-knowledge.ts      14 items, 20 concepts, 29 relationships, 5 topics, 3 reminders, history
     lib/                        Pure domain logic, no React

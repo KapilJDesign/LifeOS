@@ -135,7 +135,7 @@
       const excerpt = esc((item.original || "").slice(0, 160));
       return `<div class="proc">
         <p class="proc-saved">${LO.icon("check", 18)}<span><strong>Saved.</strong> You can close this. Organising carries on in the background.</span></p>
-        <div class="proc-card" data-tone="violet">
+        <div class="proc-card" data-tone="mint">
           <div class="proc-meta">${LO.srcGlyph(item.sourceType, 16)}<span>${esc(item.sourceName || "Your capture")}</span></div>
           <p class="proc-orig">${excerpt || "&nbsp;"}${(item.original || "").length > 160 ? "\u2026" : ""}</p>
           <div class="skel" aria-hidden="true"><i></i><i></i><i></i></div>

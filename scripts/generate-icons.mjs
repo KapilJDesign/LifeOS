@@ -6,8 +6,9 @@ import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
-const TOP = [0x7b, 0x5b, 0xf3];
-const BOTTOM = [0x36, 0x1b, 0x9e];
+const TOP = [0x70, 0xa9, 0x95];
+const BOTTOM = [0x70, 0xa9, 0x95];
+const INK = [0x0f, 0x14, 0x13];
 
 const crcTable = Array.from({ length: 256 }, (_, n) => {
   let c = n;
@@ -105,7 +106,7 @@ function render(size, { maskable }) {
           const mix = clamp((u + v) / 2);
           const bg = TOP.map((c, i) => c + (BOTTOM[i] - c) * mix);
           const glyph = glyphCoverage(u, v, maskable ? 0.72 : 0.9, pixel / samples);
-          const color = bg.map((c) => c + (255 - c) * glyph);
+          const color = bg.map((c, i) => c + (INK[i] - c) * glyph);
           r += color[0] * shape;
           g += color[1] * shape;
           b += color[2] * shape;

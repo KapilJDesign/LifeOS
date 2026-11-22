@@ -19,7 +19,7 @@ Nothing else in the original brief changes. The loop Capture → Process → Str
 
 ## 2. Stack decision
 
-The project has no existing stack, so the designer defaults apply: Vite, React 19, TypeScript (strict), Fluent UI v9 with Griffel `makeStyles`, and `@fluentui/react-icons`. Next.js is not needed because nothing requires server-side rendering. React Flow (graph) and Framer Motion (swipe) are added as specified in the brief. The editorial look and the violet/indigo palette are achieved through a custom Fluent theme, not by replacing the component library.
+The project has no existing stack, so the designer defaults apply: Vite, React 19, TypeScript (strict), Fluent UI v9 with Griffel `makeStyles`, and `@fluentui/react-icons`. Next.js is not needed because nothing requires server-side rendering. React Flow (graph) and Framer Motion (swipe) are added as specified in the brief. The editorial look and the Arctic Mint palette are achieved through a custom Fluent theme, not by replacing the component library.
 
 Tailwind, shadcn/ui and Lucide from the original brief are intentionally not used.
 

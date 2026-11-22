@@ -7,7 +7,7 @@
   const LO = (window.LO = window.LO || {});
 
   LO.topics = [
-    { id: "ai", name: "AI & Emerging Tech", short: "AI & Tech", tone: "violet", art: "agents", desc: "Agents, protocols and the tooling around them: how software starts to act on your behalf." },
+    { id: "ai", name: "AI & Emerging Tech", short: "AI & Tech", tone: "mint", art: "agents", desc: "Agents, protocols and the tooling around them: how software starts to act on your behalf." },
     { id: "design", name: "Product Design", short: "Design", tone: "steel", art: "design", desc: "Systems, quality and research, and how AI is reshaping the craft." },
     { id: "biz", name: "Business & Ideas", short: "Business", tone: "sand", art: "saas", desc: "Where SaaS is heading and the automations worth building first." },
     { id: "pk", name: "Personal Knowledge", short: "Personal", tone: "rose", art: "journal", desc: "Journals, voice notes and the ideas you keep coming back to." }

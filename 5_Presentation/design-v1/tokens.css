@@ -119,73 +119,73 @@
   --curveEasyEaseMax: cubic-bezier(0.8, 0, 0.2, 1);
   --lifeosCurveSpring: cubic-bezier(0.2, 1.1, 0.3, 1);
 
-  /* ---- Brand ramp (Fluent BrandVariants 10–160): electric violet / indigo ---- */
-  --lifeosBrand10: #0a0620;
-  --lifeosBrand20: #150c3f;
-  --lifeosBrand30: #1e1068;
-  --lifeosBrand40: #27158e;
-  --lifeosBrand50: #3119b3;
-  --lifeosBrand60: #3d1fd1;
-  --lifeosBrand70: #4b2bea;
-  --lifeosBrand80: #5b3df5;
-  --lifeosBrand90: #6f55f7;
-  --lifeosBrand100: #826cf8;
-  --lifeosBrand110: #9483fa;
-  --lifeosBrand120: #a69afb;
-  --lifeosBrand130: #b8aefc;
-  --lifeosBrand140: #cac3fd;
-  --lifeosBrand150: #dcd8fe;
-  --lifeosBrand160: #eeebff;
+  /* ---- Brand ramp (Fluent BrandVariants 10–160): Arctic Mint. Step 100 is #70A995, step 140 is Mint Light #CFECE4. ---- */
+  --lifeosBrand10: #08120f;
+  --lifeosBrand20: #0e201b;
+  --lifeosBrand30: #152e26;
+  --lifeosBrand40: #1d3e34;
+  --lifeosBrand50: #274f42;
+  --lifeosBrand60: #316353;
+  --lifeosBrand70: #3c7763;
+  --lifeosBrand80: #4b8b76;
+  --lifeosBrand90: #5b9f88;
+  --lifeosBrand100: #70a995;
+  --lifeosBrand110: #83b9a6;
+  --lifeosBrand120: #95cbb8;
+  --lifeosBrand130: #addccb;
+  --lifeosBrand140: #cfece4;
+  --lifeosBrand150: #e1f4ed;
+  --lifeosBrand160: #f0f9f6;
 
-  /* ---- Neutral surfaces: warm paper ---- */
-  --colorNeutralBackground1: #fcfbf8;
-  --colorNeutralBackground1Hover: #f7f5f0;
-  --colorNeutralBackground1Pressed: #efece5;
-  --colorNeutralBackground1Selected: #ebe7de;
-  --colorNeutralBackground2: #f4f2ed;
-  --colorNeutralBackground3: #ebe8e1;
-  --colorNeutralBackground4: #e3dfd7;
-  --colorNeutralBackground5: #d9d4ca;
-  --colorNeutralBackground6: #cec9be;
-  --colorNeutralBackgroundInverted: #17142b;
-  --colorNeutralBackgroundAlpha: rgba(252, 251, 248, 0.86);
+  /* ---- Neutral surfaces: cool mint-tinted paper. Canvas #F2F5F3, cards #FFFFFF, subtle fill #E6EEEA ---- */
+  --colorNeutralBackground1: #ffffff;
+  --colorNeutralBackground1Hover: #f7faf8;
+  --colorNeutralBackground1Pressed: #eaf1ee;
+  --colorNeutralBackground1Selected: #e6eeea;
+  --colorNeutralBackground2: #f2f5f3;
+  --colorNeutralBackground3: #e6eeea;
+  --colorNeutralBackground4: #dce6e1;
+  --colorNeutralBackground5: #d0dcd6;
+  --colorNeutralBackground6: #c4d2cb;
+  --colorNeutralBackgroundInverted: #0f1413;
+  --colorNeutralBackgroundAlpha: rgba(242, 245, 243, 0.86);
   --colorSubtleBackground: transparent;
-  --colorSubtleBackgroundHover: rgba(23, 20, 43, 0.06);
-  --colorSubtleBackgroundPressed: rgba(23, 20, 43, 0.1);
-  --colorSubtleBackgroundSelected: rgba(23, 20, 43, 0.08);
-  --colorBackgroundOverlay: rgba(23, 20, 43, 0.42);
+  --colorSubtleBackgroundHover: rgba(15, 20, 19, 0.06);
+  --colorSubtleBackgroundPressed: rgba(15, 20, 19, 0.1);
+  --colorSubtleBackgroundSelected: rgba(15, 20, 19, 0.08);
+  --colorBackgroundOverlay: rgba(15, 20, 19, 0.42);
 
-  /* ---- Neutral foregrounds: indigo-ink ---- */
-  --colorNeutralForeground1: #17142b;
-  --colorNeutralForeground2: #4a4660;
-  --colorNeutralForeground3: #65617a;
-  --colorNeutralForeground4: #65617a;
-  --colorNeutralForegroundDisabled: #a5a1b1;
-  --colorNeutralForegroundInverted: #fcfbf8;
-  --colorNeutralForegroundOnBrand: #ffffff;
+  /* ---- Neutral foregrounds: Carbon ink ---- */
+  --colorNeutralForeground1: #0f1413;
+  --colorNeutralForeground2: #3a4540;
+  --colorNeutralForeground3: #55625c;
+  --colorNeutralForeground4: #55625c;
+  --colorNeutralForegroundDisabled: #a3afa9;
+  --colorNeutralForegroundInverted: #f2f5f3;
+  --colorNeutralForegroundOnBrand: #0f1413;
 
   /* ---- Strokes ---- */
-  --colorNeutralStroke1: #cfcabf;
-  --colorNeutralStroke2: #e0dcd3;
-  --colorNeutralStroke3: #ebe8e1;
-  --colorNeutralStrokeAccessible: #76728a;
-  --colorNeutralStrokeAccessibleHover: #5f5b74;
-  --colorStrokeFocus1: #fcfbf8;
-  --colorStrokeFocus2: #17142b;
+  --colorNeutralStroke1: #c7d4ce;
+  --colorNeutralStroke2: #dde7e2;
+  --colorNeutralStroke3: #e6eeea;
+  --colorNeutralStrokeAccessible: #66746e;
+  --colorNeutralStrokeAccessibleHover: #4f5c57;
+  --colorStrokeFocus1: #ffffff;
+  --colorStrokeFocus2: #0f1413;
 
-  /* ---- Brand semantic ---- */
-  --colorBrandBackground: #5b3df5;
-  --colorBrandBackgroundHover: #4b2bea;
-  --colorBrandBackgroundPressed: #3119b3;
-  --colorBrandBackgroundSelected: #4b2bea;
-  --colorBrandBackground2: #ece8ff;
-  --colorBrandBackground2Hover: #e1dbff;
-  --colorBrandForeground1: #4b2bea;
-  --colorBrandForeground2: #3d1fd1;
-  --colorBrandForegroundLink: #4b2bea;
-  --colorBrandStroke1: #5b3df5;
-  --colorBrandStroke2: #cac3fd;
-  --colorCompoundBrandStroke: #5b3df5;
+  /* ---- Brand semantic: mint surfaces carry Carbon text (6.9:1); mint text uses the deeper step 70 family ---- */
+  --colorBrandBackground: #70a995;
+  --colorBrandBackgroundHover: #5f9c86;
+  --colorBrandBackgroundPressed: #4e8873;
+  --colorBrandBackgroundSelected: #5f9c86;
+  --colorBrandBackground2: #dcefe8;
+  --colorBrandBackground2Hover: #cfece4;
+  --colorBrandForeground1: #2b6a57;
+  --colorBrandForeground2: #235a49;
+  --colorBrandForegroundLink: #2b6a57;
+  --colorBrandStroke1: #4e8873;
+  --colorBrandStroke2: #b7dccf;
+  --colorCompoundBrandStroke: #4e8873;
 
   /* ---- Secondary: muted blue, expressed through Fluent's "steel" palette ---- */
   --colorPaletteSteelBackground2: #dce6f2;
@@ -193,7 +193,7 @@
   --colorPaletteSteelBorderActive: #4c77a6;
   --lifeosSteelSoft: #bfd0e4;
 
-  /* ---- Warm and green support tones (palette slots overridden with muted values) ---- */
+  /* ---- Warm and moss support tones (palette slots overridden with muted values) ---- */
   --colorPaletteMarigoldBackground2: #f2e6c8;
   --colorPaletteMarigoldForeground2: #7a5410;
   --colorPaletteMarigoldBorderActive: #b9842b;
@@ -202,11 +202,11 @@
   --colorPaletteBerryForeground2: #8a3548;
   --colorPaletteBerryBorderActive: #b04f63;
   --lifeosBerrySoft: #e6bfc4;
-  --colorPaletteLightGreenBackground2: #dde8d8;
-  --colorPaletteLightGreenForeground2: #2e6b4b;
-  --colorPaletteLightGreenBorderActive: #4e7d5b;
-  --lifeosLightGreenSoft: #bfd4b8;
-  --lifeosBrandSoft: #cfc6ff;
+  --colorPaletteLightGreenBackground2: #e4ebd3;
+  --colorPaletteLightGreenForeground2: #46571a;
+  --colorPaletteLightGreenBorderActive: #7c9139;
+  --lifeosLightGreenSoft: #cad7a8;
+  --lifeosBrandSoft: #b7dccf;
 
   /* ---- Status ---- */
   --colorStatusSuccessForeground1: #2e6b4b;
@@ -216,17 +216,17 @@
   --colorStatusWarningForeground1: #8a5a00;
   --colorStatusWarningBackground1: #fbefd2;
 
-  /* ---- Shadows: warm-tinted, used only on floating surfaces ---- */
-  --shadow2: 0 0 2px rgba(23, 20, 43, 0.12), 0 1px 2px rgba(23, 20, 43, 0.14);
-  --shadow4: 0 0 2px rgba(23, 20, 43, 0.12), 0 2px 4px rgba(23, 20, 43, 0.14);
-  --shadow8: 0 0 2px rgba(23, 20, 43, 0.12), 0 4px 8px rgba(23, 20, 43, 0.14);
-  --shadow16: 0 0 2px rgba(23, 20, 43, 0.12), 0 8px 16px rgba(23, 20, 43, 0.14);
-  --shadow28: 0 0 8px rgba(23, 20, 43, 0.12), 0 14px 28px rgba(23, 20, 43, 0.18);
-  --shadow64: 0 0 8px rgba(23, 20, 43, 0.12), 0 32px 64px rgba(23, 20, 43, 0.24);
+  /* ---- Shadows: Carbon-tinted, used only on floating surfaces ---- */
+  --shadow2: 0 0 2px rgba(15, 20, 19, 0.12), 0 1px 2px rgba(15, 20, 19, 0.14);
+  --shadow4: 0 0 2px rgba(15, 20, 19, 0.12), 0 2px 4px rgba(15, 20, 19, 0.14);
+  --shadow8: 0 0 2px rgba(15, 20, 19, 0.12), 0 4px 8px rgba(15, 20, 19, 0.14);
+  --shadow16: 0 0 2px rgba(15, 20, 19, 0.12), 0 8px 16px rgba(15, 20, 19, 0.14);
+  --shadow28: 0 0 8px rgba(15, 20, 19, 0.12), 0 14px 28px rgba(15, 20, 19, 0.18);
+  --shadow64: 0 0 8px rgba(15, 20, 19, 0.12), 0 32px 64px rgba(15, 20, 19, 0.24);
 
   /* ---- Art ink (illustration strokes) ---- */
-  --lifeosArtInk: #17142b;
-  --lifeosArtPaper: #fcfbf8;
+  --lifeosArtInk: #0f1413;
+  --lifeosArtPaper: #ffffff;
 
   /* ---- Layout (theme extension) ---- */
   --lifeosTouchTarget: 44px;
@@ -236,54 +236,54 @@
   --lifeosSafeBottom: env(safe-area-inset-bottom, 0px);
 }
 
-/* ===== Dark theme: very dark charcoal with a luminous violet ===== */
+/* ===== Dark theme: Carbon canvas, Surface cards, Arctic Mint accent ===== */
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --colorNeutralBackground1: #1c1a21;
-  --colorNeutralBackground1Hover: #232029;
-  --colorNeutralBackground1Pressed: #2a2631;
-  --colorNeutralBackground1Selected: #2c2834;
-  --colorNeutralBackground2: #131216;
-  --colorNeutralBackground3: #0e0d11;
-  --colorNeutralBackground4: #0a0a0d;
-  --colorNeutralBackground5: #070709;
+  --colorNeutralBackground1: #171c1b;
+  --colorNeutralBackground1Hover: #1e2523;
+  --colorNeutralBackground1Pressed: #252d2a;
+  --colorNeutralBackground1Selected: #2a3330;
+  --colorNeutralBackground2: #0f1413;
+  --colorNeutralBackground3: #0b1110;
+  --colorNeutralBackground4: #080c0b;
+  --colorNeutralBackground5: #050807;
   --colorNeutralBackground6: #000000;
-  --colorNeutralBackgroundInverted: #f2eff7;
-  --colorNeutralBackgroundAlpha: rgba(28, 26, 33, 0.84);
-  --colorSubtleBackgroundHover: rgba(242, 239, 247, 0.07);
-  --colorSubtleBackgroundPressed: rgba(242, 239, 247, 0.12);
-  --colorSubtleBackgroundSelected: rgba(242, 239, 247, 0.1);
+  --colorNeutralBackgroundInverted: #e9f2ee;
+  --colorNeutralBackgroundAlpha: rgba(23, 28, 27, 0.84);
+  --colorSubtleBackgroundHover: rgba(238, 245, 242, 0.07);
+  --colorSubtleBackgroundPressed: rgba(238, 245, 242, 0.12);
+  --colorSubtleBackgroundSelected: rgba(238, 245, 242, 0.1);
   --colorBackgroundOverlay: rgba(0, 0, 0, 0.6);
 
-  --colorNeutralForeground1: #f2eff7;
-  --colorNeutralForeground2: #c3bed0;
-  --colorNeutralForeground3: #9d98ad;
-  --colorNeutralForeground4: #9d98ad;
-  --colorNeutralForegroundDisabled: #5d586a;
-  --colorNeutralForegroundInverted: #17142b;
-  --colorNeutralForegroundOnBrand: #ffffff;
+  --colorNeutralForeground1: #eef5f2;
+  --colorNeutralForeground2: #bfccc6;
+  --colorNeutralForeground3: #93a29b;
+  --colorNeutralForeground4: #93a29b;
+  --colorNeutralForegroundDisabled: #55625c;
+  --colorNeutralForegroundInverted: #0f1413;
+  --colorNeutralForegroundOnBrand: #0f1413;
 
-  --colorNeutralStroke1: #3a3643;
-  --colorNeutralStroke2: #2b2833;
-  --colorNeutralStroke3: #211f28;
-  --colorNeutralStrokeAccessible: #8a859c;
-  --colorNeutralStrokeAccessibleHover: #a8a3b9;
-  --colorStrokeFocus1: #131216;
-  --colorStrokeFocus2: #f2eff7;
+  --colorNeutralStroke1: #2a3330;
+  --colorNeutralStroke2: #222b28;
+  --colorNeutralStroke3: #1b2321;
+  --colorNeutralStrokeAccessible: #7c8b85;
+  --colorNeutralStrokeAccessibleHover: #9aa9a3;
+  --colorStrokeFocus1: #0f1413;
+  --colorStrokeFocus2: #eef5f2;
 
-  --colorBrandBackground: #6a4ff5;
-  --colorBrandBackgroundHover: #7b63ff;
-  --colorBrandBackgroundPressed: #5b3df5;
-  --colorBrandBackgroundSelected: #7b63ff;
-  --colorBrandBackground2: #241e4f;
-  --colorBrandBackground2Hover: #2d2663;
-  --colorBrandForeground1: #a99cff;
-  --colorBrandForeground2: #bdb3ff;
-  --colorBrandForegroundLink: #a99cff;
-  --colorBrandStroke1: #8f7cff;
-  --colorBrandStroke2: #3a3080;
-  --colorCompoundBrandStroke: #8f7cff;
+  --colorBrandBackground: #70a995;
+  --colorBrandBackgroundHover: #82b9a5;
+  --colorBrandBackgroundPressed: #5f9c86;
+  --colorBrandBackgroundSelected: #82b9a5;
+  --colorBrandBackground2: #1b2e27;
+  --colorBrandBackground2Hover: #223a31;
+  --colorBrandForeground1: #8ec5b0;
+  --colorBrandForeground2: #a7d6c5;
+  --colorBrandForegroundLink: #8ec5b0;
+  --colorBrandStroke1: #70a995;
+  --colorBrandStroke2: #2d4a3f;
+  --colorCompoundBrandStroke: #70a995;
 
   --colorPaletteSteelBackground2: #1e2d42;
   --colorPaletteSteelForeground2: #9dbde0;
@@ -297,11 +297,11 @@
   --colorPaletteBerryForeground2: #eba2b1;
   --colorPaletteBerryBorderActive: #d98496;
   --lifeosBerrySoft: #583038;
-  --colorPaletteLightGreenBackground2: #223024;
-  --colorPaletteLightGreenForeground2: #a4cfae;
-  --colorPaletteLightGreenBorderActive: #8dbb98;
-  --lifeosLightGreenSoft: #33483a;
-  --lifeosBrandSoft: #3a3080;
+  --colorPaletteLightGreenBackground2: #262d17;
+  --colorPaletteLightGreenForeground2: #bdd08a;
+  --colorPaletteLightGreenBorderActive: #a3ba5e;
+  --lifeosLightGreenSoft: #3b4624;
+  --lifeosBrandSoft: #2d4a3f;
 
   --colorStatusSuccessForeground1: #8dd1a5;
   --colorStatusSuccessBackground1: #1c2e22;
@@ -317,8 +317,8 @@
   --shadow28: 0 0 8px rgba(0, 0, 0, 0.5), 0 14px 28px rgba(0, 0, 0, 0.55);
   --shadow64: 0 0 8px rgba(0, 0, 0, 0.5), 0 32px 64px rgba(0, 0, 0, 0.6);
 
-  --lifeosArtInk: #ece8f8;
-  --lifeosArtPaper: #1c1a21;
+  --lifeosArtInk: #e4efea;
+  --lifeosArtPaper: #171c1b;
 }
 
 /* ===== High contrast: defer to the operating system palette ===== */
@@ -351,9 +351,10 @@
 }
 
 /* ===== Illustration tones: flat fields, one per topic ===== */
-[data-tone="violet"] { --tone-bg: var(--colorBrandBackground2); --tone-acc: var(--colorBrandBackground); --tone-soft: var(--lifeosBrandSoft); --tone-fg: var(--colorBrandForeground2); }
+[data-tone="mint"]   { --tone-bg: var(--colorBrandBackground2); --tone-acc: var(--colorBrandBackground); --tone-soft: var(--lifeosBrandSoft); --tone-fg: var(--colorBrandForeground2); }
 [data-tone="steel"]  { --tone-bg: var(--colorPaletteSteelBackground2); --tone-acc: var(--colorPaletteSteelBorderActive); --tone-soft: var(--lifeosSteelSoft); --tone-fg: var(--colorPaletteSteelForeground2); }
 [data-tone="sand"]   { --tone-bg: var(--colorPaletteMarigoldBackground2); --tone-acc: var(--colorPaletteMarigoldBorderActive); --tone-soft: var(--lifeosMarigoldSoft); --tone-fg: var(--colorPaletteMarigoldForeground2); }
 [data-tone="rose"]   { --tone-bg: var(--colorPaletteBerryBackground2); --tone-acc: var(--colorPaletteBerryBorderActive); --tone-soft: var(--lifeosBerrySoft); --tone-fg: var(--colorPaletteBerryForeground2); }
 [data-tone="sage"]   { --tone-bg: var(--colorPaletteLightGreenBackground2); --tone-acc: var(--colorPaletteLightGreenBorderActive); --tone-soft: var(--lifeosLightGreenSoft); --tone-fg: var(--colorPaletteLightGreenForeground2); }
-[data-tone="ink"]    { --tone-bg: var(--colorNeutralBackgroundInverted); --tone-acc: var(--lifeosBrand110); --tone-soft: var(--lifeosBrand50); --tone-fg: var(--colorNeutralForegroundInverted); }
+[data-tone="ink"]    { --tone-bg: var(--colorNeutralBackgroundInverted); --tone-acc: var(--lifeosBrand100); --tone-soft: var(--lifeosBrand50); --tone-fg: var(--colorNeutralForegroundInverted); }
+[data-theme="dark"] [data-tone="ink"] { --tone-acc: var(--lifeosBrand70); --tone-soft: var(--lifeosBrand130); }

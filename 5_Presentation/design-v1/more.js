@@ -31,10 +31,10 @@
 
   /* ================= INFOGRAPHIC ================= */
   const PAL = {
-    violet: { light: { bg: "#ece8ff", ink: "#17142b", acc: "#5b3df5", soft: "#cfc6ff", paper: "#fcfbf8", fg2: "#4a4660" }, dark: { bg: "#241e4f", ink: "#ece8f8", acc: "#8f7cff", soft: "#3a3080", paper: "#1c1a21", fg2: "#c3bed0" } },
-    steel: { light: { bg: "#dce6f2", ink: "#17142b", acc: "#4c77a6", soft: "#bfd0e4", paper: "#fcfbf8", fg2: "#4a4660" }, dark: { bg: "#1e2d42", ink: "#ece8f8", acc: "#7fa6d1", soft: "#2c4262", paper: "#1c1a21", fg2: "#c3bed0" } },
-    sand: { light: { bg: "#f2e6c8", ink: "#17142b", acc: "#b9842b", soft: "#e6d3a3", paper: "#fcfbf8", fg2: "#4a4660" }, dark: { bg: "#392f18", ink: "#ece8f8", acc: "#d7a64a", soft: "#54451f", paper: "#1c1a21", fg2: "#c3bed0" } },
-    rose: { light: { bg: "#f2dcdd", ink: "#17142b", acc: "#b04f63", soft: "#e6bfc4", paper: "#fcfbf8", fg2: "#4a4660" }, dark: { bg: "#3b2227", ink: "#ece8f8", acc: "#d98496", soft: "#583038", paper: "#1c1a21", fg2: "#c3bed0" } }
+    mint: { light: { bg: "#dcefe8", ink: "#0f1413", acc: "#70a995", soft: "#b7dccf", paper: "#ffffff", fg2: "#3a4540" }, dark: { bg: "#1b2e27", ink: "#eef5f2", acc: "#70a995", soft: "#2d4a3f", paper: "#171c1b", fg2: "#bfccc6" } },
+    steel: { light: { bg: "#dce6f2", ink: "#0f1413", acc: "#4c77a6", soft: "#bfd0e4", paper: "#ffffff", fg2: "#3a4540" }, dark: { bg: "#1e2d42", ink: "#eef5f2", acc: "#7fa6d1", soft: "#2c4262", paper: "#171c1b", fg2: "#bfccc6" } },
+    sand: { light: { bg: "#f2e6c8", ink: "#0f1413", acc: "#b9842b", soft: "#e6d3a3", paper: "#ffffff", fg2: "#3a4540" }, dark: { bg: "#392f18", ink: "#eef5f2", acc: "#d7a64a", soft: "#54451f", paper: "#171c1b", fg2: "#bfccc6" } },
+    rose: { light: { bg: "#f2dcdd", ink: "#0f1413", acc: "#b04f63", soft: "#e6bfc4", paper: "#ffffff", fg2: "#3a4540" }, dark: { bg: "#3b2227", ink: "#eef5f2", acc: "#d98496", soft: "#583038", paper: "#171c1b", fg2: "#bfccc6" } }
   };
   const FONT_D = "'Bricolage Grotesque','Avenir Next Condensed','Helvetica Neue',Arial,sans-serif";
   const FONT_R = "'Newsreader','Iowan Old Style','Palatino Linotype',Georgia,serif";
@@ -79,7 +79,7 @@
         .ig .f{fill:${p.ink};stroke:none} .ig .fa{fill:${p.acc};stroke:none} .ig .fs{fill:${p.soft};stroke:none} .ig .fp{fill:${p.paper};stroke:${p.ink};stroke-width:2.5} .ig .sa{fill:none;stroke:${p.acc};stroke-width:2.5;stroke-linecap:round}
       </style>
       <rect width="1080" height="1350" fill="${p.bg}"/>
-      <rect x="72" y="52" width="44" height="44" rx="14" fill="#5b3df5"/><circle cx="94" cy="74" r="10" fill="none" stroke="#fff" stroke-width="3.4"/><circle cx="103" cy="67" r="4.4" fill="#fff"/>
+      <rect x="72" y="52" width="44" height="44" rx="14" fill="#70a995"/><circle cx="94" cy="74" r="10" fill="none" stroke="#0f1413" stroke-width="3.4"/><circle cx="103" cy="67" r="4.4" fill="#0f1413"/>
       <text x="130" y="84" font-size="30" font-weight="700" class="ui" fill="${p.ink}">Life OS</text>
       <text x="1008" y="82" text-anchor="end" font-size="26" class="ui" fill="${p.fg2}">${esc(it.sourceName || "")}</text>
       <clipPath id="igc"><rect x="72" y="124" width="936" height="276" rx="40"/></clipPath>
@@ -287,7 +287,7 @@
       return `<div class="page states">
         <header class="page-head"><h1 class="title">States gallery</h1><p class="lede">Every non-happy path, in one place. Prototype review only.</p></header>
         <div class="st-grid">
-          <section class="st-box" aria-labelledby="g1"><h2 class="side-h" id="g1">Empty: library</h2><div class="empty"><div class="empty-art" data-tone="violet">${LO.art("research")}</div><h3 class="empty-h">Nothing here yet</h3><p class="empty-p">Capture a thought, a link or a voice note and it will show up here, already organised.</p><div class="empty-a"><button class="btn primary" type="button" data-act="capture">${LO.icon("plus", 18)}Capture something</button></div></div></section>
+          <section class="st-box" aria-labelledby="g1"><h2 class="side-h" id="g1">Empty: library</h2><div class="empty"><div class="empty-art" data-tone="mint">${LO.art("research")}</div><h3 class="empty-h">Nothing here yet</h3><p class="empty-p">Capture a thought, a link or a voice note and it will show up here, already organised.</p><div class="empty-a"><button class="btn primary" type="button" data-act="capture">${LO.icon("plus", 18)}Capture something</button></div></div></section>
           <section class="st-box" aria-labelledby="g2"><h2 class="side-h" id="g2">Loading</h2><div class="skel-list" aria-busy="true" aria-label="Loading">${Array.from({ length: 3 }, () => `<div class="row skel-row"><span class="thumb skel-box"></span><span class="row-body"><i class="shimmer-line"></i><i class="shimmer-line s"></i></span></div>`).join("")}</div></section>
           <section class="st-box" aria-labelledby="g3"><h2 class="side-h" id="g3">Organising</h2><div class="proc"><p class="proc-saved">${LO.icon("check", 18)}<span><strong>Saved.</strong> You can close this. Organising carries on in the background.</span></p><ol class="proc-steps"><li class="done"><span class="ps-ic">${LO.icon("check", 14)}</span><span>Reading the source</span></li><li class="done"><span class="ps-ic">${LO.icon("check", 14)}</span><span>Summarising</span></li><li class="active"><span class="ps-ic"></span><span>Finding concepts</span></li><li><span class="ps-ic"></span><span>Linking to what you have saved</span></li></ol></div></section>
           <section class="st-box" aria-labelledby="g4"><h2 class="side-h" id="g4">Error: organising failed</h2><div class="msgbar err" role="group" aria-label="Error example">${LO.icon("info", 20)}<div><p class="mb-t">We saved it, but couldn't organise it</p><p class="mb-s">Your original is safe. Try again, or edit the summary yourself.</p></div><div class="mb-a"><button class="btn outline sm" type="button" data-s-toast="retry">Try again</button><button class="btn subtle sm" type="button" data-s-toast="edit">Edit manually</button></div></div></section>

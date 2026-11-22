@@ -246,7 +246,7 @@
     document.documentElement.dataset.theme = dark ? "dark" : "light";
     document.documentElement.dataset.motion = LO.state.reduceMotion ? "reduce" : "";
     const m = $('meta[name="theme-color"]');
-    if (m) m.setAttribute("content", dark ? "#131216" : "#f4f2ed");
+    if (m) m.setAttribute("content", dark ? "#0f1413" : "#f2f5f3");
     const b = $("#themeBtn");
     if (b) {
       b.innerHTML = LO.icon(dark ? "sun" : "moon", 20);

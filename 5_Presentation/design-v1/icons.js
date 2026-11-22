@@ -111,6 +111,6 @@
   /* Brand mark: a ring with one orbiting node. Original, not derived from any logo. */
   LO.mark = function (size) {
     const s = size || 28;
-    return `<svg class="mark" width="${s}" height="${s}" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="10" fill="var(--colorBrandBackground)"/><circle cx="16" cy="16" r="7.2" fill="none" stroke="#fff" stroke-width="2.4"/><circle cx="22.3" cy="11.2" r="3.1" fill="#fff"/></svg>`;
+    return `<svg class="mark" width="${s}" height="${s}" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="10" fill="var(--colorBrandBackground)"/><circle cx="16" cy="16" r="7.2" fill="none" stroke="var(--colorNeutralForegroundOnBrand)" stroke-width="2.4"/><circle cx="22.3" cy="11.2" r="3.1" fill="var(--colorNeutralForegroundOnBrand)"/></svg>`;
   };
 })();

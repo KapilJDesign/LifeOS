@@ -141,7 +141,7 @@
       const c = LO.concept(n.ref);
       const items = LO.itemsOf(n.ref);
       const conc = nbrNodes.filter((x) => x.type === "concept" || x.type === "topic");
-      return `<div class="gp" data-tone="${topic ? topic.tone : "violet"}"><div class="gp-head"><span class="gp-kind">Concept</span>${close}</div><h2 class="gp-h">${esc(c.name)}</h2><p class="gp-s">${esc(c.desc)}</p>
+      return `<div class="gp" data-tone="${topic ? topic.tone : "mint"}"><div class="gp-head"><span class="gp-kind">Concept</span>${close}</div><h2 class="gp-h">${esc(c.name)}</h2><p class="gp-s">${esc(c.desc)}</p>
         ${conc.length ? `<h3 class="det-h">Connected</h3><ul class="gp-list">${conc.map((o) => `<li><button type="button" class="gp-row" data-g-sel="${o.id}"><span class="gp-dot ${o.type}"></span><span class="gp-rel">${edgeLabel(o)}</span><span class="gp-t">${esc(o.label)}</span>${LO.icon("chevR", 16)}</button></li>`).join("")}</ul>` : ""}
         <h3 class="det-h">Saved items <span class="count-pill">${items.length}</span></h3>
         <ul class="gp-items">${items.map((it) => `<li><a class="row" href="#/item/${it.id}">${LO.thumb(it)}<span class="row-body"><span class="row-title">${esc(it.title)}</span><span class="row-meta">${LO.srcGlyph(it.sourceType, 14)}<span>${LO.timeAgo(it.createdAt)}</span></span></span></a></li>`).join("") || '<li class="muted">Nothing saved yet.</li>'}</ul>

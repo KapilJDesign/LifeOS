@@ -66,11 +66,11 @@
           ${(t.followups || []).length ? `<div class="ans-follow" aria-label="Follow-up questions">${t.followups.map((f) => `<button class="chip" type="button" data-c="ask" data-q="${esc(f)}">${esc(f)}</button>`).join("")}</div>` : ""}`;
       }
     }
-    return `<div class="turn"><p class="q"><span class="vh">You asked: </span>${esc(t.q)}</p><div class="ans" data-tone="violet"><span class="ans-mark" aria-hidden="true">${LO.icon("spark", 16)}</span><div class="ans-body">${body}</div></div></div>`;
+    return `<div class="turn"><p class="q"><span class="vh">You asked: </span>${esc(t.q)}</p><div class="ans" data-tone="mint"><span class="ans-mark" aria-hidden="true">${LO.icon("spark", 16)}</span><div class="ans-body">${body}</div></div></div>`;
   }
   function introHTML() {
     const sugg = LO.askSeed.slice(0, 6).map((s) => s.q);
-    return `<div class="chat-intro"><div class="intro-art" data-tone="violet">${LO.art("chat")}</div>
+    return `<div class="chat-intro"><div class="intro-art" data-tone="mint">${LO.art("chat")}</div>
       <h2 class="intro-h">Ask your second brain</h2>
       <p class="intro-p">Get one consolidated answer from your notes, meetings, emails, calls and health, with numbered sources that open the original.</p>
       <ul class="sugg">${sugg.map((q) => `<li><button class="sugg-b" type="button" data-c="ask" data-q="${esc(q)}">${LO.icon("spark", 18)}<span>${esc(q)}</span></button></li>`).join("")}</ul></div>`;
@@ -93,7 +93,7 @@
   function sourcesPaneHTML() {
     const last = [...A.thread].reverse().find((t) => t.cites && t.cites.length && t.status === "done");
     const id = A.active || (last && last.cites[0]);
-    if (!last) return `<div class="pane-empty"><div class="pane-empty-art" data-tone="violet">${LO.art("network")}</div><h2>Sources appear here</h2><p>Every claim in an answer links to the note it came from. Pick a number to read the original.</p></div>`;
+    if (!last) return `<div class="pane-empty"><div class="pane-empty-art" data-tone="mint">${LO.art("network")}</div><h2>Sources appear here</h2><p>Every claim in an answer links to the note it came from. Pick a number to read the original.</p></div>`;
     const it = LO.item(id);
     const q = last.q;
     return `<div class="sp"><h2 class="sp-h">Sources</h2>

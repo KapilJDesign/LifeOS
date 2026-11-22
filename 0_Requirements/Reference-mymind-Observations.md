@@ -126,7 +126,7 @@ None of this is built or approved. It is a starting point for the design review 
 
 - Any wording from the reference, including "private oasis", "Enjoy the silence", the six "No …" promises, "One click and it's in your mind", and the tier names.
 - The reference's colours, typeface, logo, imagery and exact screen layouts.
-- The overall visual metaphor of a calm, hushed "mind". Life OS has its own identity: electric violet to deep indigo, with Bricolage Grotesque for interface text and Newsreader for editorial text (see `src/theme/index.ts` and `5_Presentation/design-v1/tokens.css`).
+- The overall visual metaphor of a calm, hushed "mind". Life OS has its own identity: Arctic Mint (#70A995) on Carbon (#0F1413) and cool mint-tinted neutrals, with Bricolage Grotesque for interface text and Newsreader for editorial text (see `src/theme/index.ts` and `5_Presentation/design-v1/tokens.css`).
 
 ## 11. Open questions
 
