@@ -5,8 +5,9 @@ const browser = await chromium.launch({ channel: "chrome" });
 let fails = 0;
 const ok = (c, m) => { console.log((c ? "PASS " : "FAIL ") + m); if (!c) fails++; };
 
-async function fresh(vp, hash) {
+async function fresh(vp, hash, opts) {
   const ctx = await browser.newContext({ viewport: vp, hasTouch: vp.width < 768, permissions: ["clipboard-read", "clipboard-write"] });
+  if (!(opts && opts.firstRun)) await ctx.addInitScript(() => { try { if (!localStorage.getItem("lifeos.proto.v1")) localStorage.setItem("lifeos.proto.v1", JSON.stringify({ welcomed: true })); } catch (e) {} });
   const p = await ctx.newPage();
   p.errs = [];
   p.on("pageerror", (e) => p.errs.push(e.message));
@@ -152,6 +153,48 @@ await p.fill("#tbQ", "What did I save about AI agents?"); await p.click('[data-a
 await p.keyboard.press("Escape");
 ok(p.errs.length === 0, "desktop: no console errors " + p.errs.join(" | "));
 await p.context().close();
+
+/* ---------------- first-run onboarding ---------------- */
+p = await fresh({ width: 390, height: 844 }, "#/home", { firstRun: true });
+ok((await hash(p)).startsWith("#/onboarding"), "onboarding: first visit to Home redirects");
+ok(!(await p.isVisible("#bottomnav")), "onboarding: app shell hidden");
+await p.click('[data-ob="next"]'); await p.waitForTimeout(300);
+ok((await hash(p)).includes("step=1") && (await p.isVisible("#obText")), "onboarding: step 2 shows the capture field");
+ok(await p.isVisible("#obNext") && (await p.textContent("#obNext")).trim() === "Skip for now", "onboarding: capture step can be skipped");
+await p.click("#obSave"); await p.waitForSelector(".ob-card", { timeout: 9000 });
+ok((await p.textContent(".ob-card")).includes("Build an AI agent"), "onboarding: first capture is organised");
+ok((await p.textContent("#obNext")).trim() === "Continue", "onboarding: continue after saving");
+await p.click("#obNext"); await p.waitForTimeout(300);
+ok(await p.isVisible('[data-tabs="obd"]'), "onboarding: save-from-anywhere step");
+await p.click('[data-tab="desk"]'); await p.waitForTimeout(150);
+ok(await p.isVisible("#obd-p-desk"), "onboarding: device tabs switch");
+await p.click("#obClip"); ok((await p.getAttribute("#obClip", "aria-checked")) === "false", "onboarding: clipboard switch toggles");
+await p.click("#obNext"); await p.waitForTimeout(300);
+await p.click('.ob-topic[data-topic="design"]'); ok((await p.getAttribute('.ob-topic[data-topic="design"]', "aria-pressed")) === "true", "onboarding: topic toggles on");
+await p.click('[data-ob="back"]'); await p.waitForTimeout(250);
+ok((await hash(p)).includes("step=2"), "onboarding: back goes to previous step");
+await p.click("#obNext"); await p.waitForTimeout(250);
+ok((await p.getAttribute('.ob-topic[data-topic="design"]', "aria-pressed")) === "true", "onboarding: picks survive navigation");
+await p.click("#obNext"); await p.waitForTimeout(500);
+ok((await hash(p)).startsWith("#/home"), "onboarding: finish lands on Home");
+ok((await p.textContent(".colls .coll-n")).includes("Product Design"), "onboarding: chosen topic is first on Home");
+await p.reload(); await p.waitForTimeout(500);
+ok((await hash(p)).startsWith("#/home"), "onboarding: not shown again after finishing");
+ok(p.errs.length === 0, "onboarding: no console errors " + p.errs.join(" | "));
+await p.context().close();
+
+p = await fresh({ width: 390, height: 844 }, "#/home", { firstRun: true });
+await p.click('[data-ob="skip"]'); await p.waitForTimeout(400);
+ok((await hash(p)).startsWith("#/home") && (await p.isVisible("#bottomnav")), "onboarding: skip goes straight to Home");
+await p.goto(BASE + "#/settings"); await p.waitForTimeout(300);
+await p.click('a[href="#/onboarding"]'); await p.waitForTimeout(300);
+ok((await hash(p)).startsWith("#/onboarding"), "onboarding: replay from Settings");
+await p.context().close();
+
+p = await fresh({ width: 1440, height: 900 }, "#/home", { firstRun: true });
+ok(await p.isVisible(".ob-visual") && !(await p.isVisible("#sidebar")), "onboarding: desktop two-column, no sidebar");
+await p.context().close();
 await browser.close();
+
 console.log(fails ? `\n${fails} FAILED` : "\nAll flows pass");
 process.exit(fails ? 1 : 0);

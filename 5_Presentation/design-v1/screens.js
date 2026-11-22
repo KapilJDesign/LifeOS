@@ -26,18 +26,59 @@
         <span class="recent-time">${it.processing ? "Organising\u2026" : LO.timeAgo(it.createdAt)}</span>
       </span></a>`;
 
-  /* ================= HOME ================= */
+  /* ================= HOME (Today) ================= */
+  const clock = (ts) => new Date(ts).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+  const spanLabel = (m) => (m < 60 ? m + " min" : m % 60 ? Math.floor(m / 60) + " h " + (m % 60) + " min" : m / 60 + " h");
+
+  /* "Recently captured" is what you saved: calendar, email and health syncs live in Today and Library instead. */
+  const isRecent = (i) => i.processing || (i.sourceType !== "journal" && (!LO.isLife(i) || i.isNew));
+
+  function scheduleHTML(t) {
+    if (!t.schedule.length) return `<p class="ag-empty">${LO.icon("calendar", 20)}<span>Nothing scheduled today. <a href="#/settings">Connect your calendar</a> to see meetings here.</span></p>`;
+    const now = Date.now();
+    return `<ol class="ag-list">${t.schedule.map(({ item, state }) => {
+      const mins = Math.round((item.endsAt - item.startsAt) / 60000);
+      const badge = state === "now" ? "Now" : state === "next" ? "In " + spanLabel(Math.max(1, Math.round((item.startsAt - now) / 60000))) : state === "done" ? "Done" : "";
+      const who = (item.people || []).length ? "with " + item.people.join(", ") : item.sourceName || "";
+      return `<li class="ag" data-state="${state}">
+        <span class="ag-time"><b>${clock(item.startsAt)}</b><small>${spanLabel(mins)}</small></span>
+        <a class="ag-body" href="#/item/${item.id}"><span class="ag-t">${esc(item.title)}</span><span class="ag-m">${LO.srcGlyph(item.sourceType, 14)}<span>${esc(who)}</span></span></a>
+        ${badge ? `<span class="ag-badge">${esc(badge)}</span>` : ""}</li>`;
+    }).join("")}</ol>`;
+  }
+
+  const priRow = (p) => {
+    const body = `<span class="pri-t">${esc(p.title)}</span><span class="pri-w">${p.src ? LO.srcGlyph(p.src.sourceType, 14) : ""}<span>${esc(p.why)}</span></span>`;
+    return `<li class="pri"><label class="check pri-check"><input type="checkbox" data-pri="${p.key}" /><span class="box" aria-hidden="true">${LO.icon("check", 14)}</span><span class="vh">Mark done: ${esc(p.title)}</span></label>${p.src ? `<a class="pri-body" href="#/item/${p.src.id}">${body}</a>` : `<span class="pri-body">${body}</span>`}</li>`;
+  };
+  function prioritiesHTML(t) {
+    if (!t.priorities.length) return `<p class="ag-empty">${LO.icon("check", 20)}<span>You are clear. Nothing is waiting on you.</span></p>`;
+    return `<ul class="pri-list">${t.top.map(priRow).join("")}</ul>${t.more.length ? `<details class="pri-more"><summary><span>${t.more.length} more</span>${LO.icon("chevD", 16)}</summary><ul class="pri-list">${t.more.map(priRow).join("")}</ul></details>` : ""}`;
+  }
+
+  function healthHTML(t, cls) {
+    const seen = new Set();
+    const meters = t.health.filter((h) => (seen.has(h.metric.label) ? false : seen.add(h.metric.label))).slice(0, 2);
+    if (!meters.length && !t.appointment) return "";
+    const a = t.appointment;
+    return `<section class="side-sec hl ${cls}" aria-labelledby="hl-h-${cls}"><div class="side-head"><h2 class="side-h" id="hl-h-${cls}">Health</h2><a class="link" href="#/library?f=health">All health</a></div>
+      <ul class="hl-list">${meters.map((h) => { const pct = Math.round(Math.min(1, h.metric.pct) * 100); return `<li><a href="#/item/${h.id}"><span class="hl-top"><span class="hl-l">${esc(h.metric.label)}</span><span class="hl-v">${esc(h.metric.value)}<small> of ${esc(h.metric.goal)}</small></span></span><span class="meter" role="img" aria-label="${pct} percent of goal"><i style="width:${pct}%"></i></span></a></li>`; }).join("")}</ul>
+      ${a ? `<a class="hl-appt" href="#/item/${a.id}">${LO.icon("calendar", 16)}<span>${esc(a.title)}, ${new Date(a.startsAt).toLocaleDateString(undefined, { weekday: "short" })} ${clock(a.startsAt)}</span></a>` : ""}</section>`;
+  }
+
   function homeHTML() {
     const s = LO.state;
     const h = new Date().getHours();
     const greet = h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening";
     const ready = unseenItems().length;
+    const t = LO.today();
+    const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
     const feat = LO.item("i10") || s.items[0];
     const unseen = unseenItems().filter((i) => i.id !== feat.id).sort((a, b) => a.createdAt - b.createdAt)[0] || s.items[s.items.length - 1];
     const ft = LO.topicById(feat.topic);
     const seenN = weekSeen();
     const total = s.deck.length;
-    const recents = s.items.filter((i) => i.sourceType !== "journal" || i.processing).slice().sort((a, b) => b.createdAt - a.createdAt).slice(0, 8);
+    const recents = s.items.filter(isRecent).slice().sort((a, b) => b.createdAt - a.createdAt).slice(0, 8);
     const openRem = s.reminders.filter((r) => !r.completed).sort((a, b) => a.dueAt - b.dueAt);
     const journals = s.items.filter((i) => i.sourceType === "journal").length;
     const days = Array.from({ length: 7 }, (_, k) => {
@@ -54,8 +95,9 @@
           <ul class="rev-days" aria-label="Days you revisited knowledge">${days.map((d) => `<li class="${d.on ? "on" : ""}"><span class="vh">${d.full}${d.on ? ", revisited" : ""}</span><i aria-hidden="true"></i><b aria-hidden="true">${d.label}</b></li>`).join("")}</ul></div>
       </section>`;
 
-    const remList = `<section aria-labelledby="rm-h" class="side-sec"><div class="side-head"><h2 class="side-h" id="rm-h">Coming up</h2><a class="link" href="#/reminders">All reminders</a></div>
-        <ul class="rem-mini">${openRem.slice(0, 3).map((r) => `<li><label class="check"><input type="checkbox" data-rem="${r.id}" /><span class="box" aria-hidden="true">${LO.icon("check", 14)}</span><span class="check-t">${esc(r.title)} <em>${LO.dueLabel(r.dueAt)}</em></span></label></li>`).join("") || '<li class="muted">Nothing due. Nice.</li>'}</ul></section>`;
+    const healthSide = healthHTML(t, "hl-side");
+    const healthSmall = healthHTML(t, "hl-small");
+    const todayDate = new Date().toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long" });
 
     const banner = s.bannerDismissed ? "" : `<section class="setup" aria-labelledby="su-h">
         <div class="setup-ic">${LO.icon("share", 22)}</div>
@@ -63,7 +105,7 @@
         <div class="setup-a"><a class="btn primary" href="#/welcome">Set up capture</a><button class="btn subtle" type="button" data-act="dismiss-banner">Not now</button></div></div></section>`;
 
     return `<div class="home">
-      <section class="home-hero"><h1 class="display">${greet}, Kapil</h1><p class="lede">${s.items.length} notes across ${LO.topics.length} topics. ${ready} ${ready === 1 ? "is" : "are"} ready to revisit.</p></section>
+      <section class="home-hero"><h1 class="display">${greet}, Kapil</h1><p class="lede">${plural(t.left, "meeting", "meetings")} left, ${plural(t.owed, "reply", "replies")} owed, ${ready} ${ready === 1 ? "card" : "cards"} to revisit.</p></section>
 
       <form class="quickbar" id="quickbar" aria-label="Quick capture">
         <label class="vh" for="qb">Quick capture</label>
@@ -75,8 +117,19 @@
 
       <div class="home-grid">
         <div class="home-main">
+          <section aria-labelledby="h-today">
+            <div class="sec-head"><h2 class="sec-h" id="h-today">Today</h2><span class="sec-sub">${todayDate}</span></div>
+            <div id="agenda">${scheduleHTML(t)}</div>
+          </section>
+
+          <section aria-labelledby="h-pri">
+            <div class="sec-head"><h2 class="sec-h" id="h-pri">Priorities</h2><span class="sec-sub">${t.priorities.length} open</span></div>
+            <div id="priorities">${prioritiesHTML(t)}</div>
+          </section>
+          ${healthSmall}
+
           <section aria-labelledby="h-disc">
-            <h2 class="sec-h" id="h-disc">Today's discovery</h2>
+            <h2 class="sec-h" id="h-disc">Worth a second look</h2>
             <article class="disc" data-tone="${ft.tone}">
               <div class="disc-art">${LO.art(feat.art)}</div>
               <div class="disc-body">
@@ -99,7 +152,7 @@
 
           <section aria-labelledby="h-top">
             <h2 class="sec-h" id="h-top">Explore your knowledge</h2>
-            <div class="colls">${LO.topics.map((t) => {
+            <div class="colls">${LO.topics.slice().sort((a, b) => (s.interests.includes(b.id) ? 1 : 0) - (s.interests.includes(a.id) ? 1 : 0)).map((t) => {
               const n = s.items.filter((i) => i.topic === t.id).length;
               return `<a class="coll" href="#/library?topic=${t.id}" data-tone="${t.tone}"><span class="coll-art">${LO.art(t.art)}</span><span class="coll-b"><span class="coll-n">${esc(t.name)}</span><span class="coll-c">${n} saved</span><span class="coll-d">${esc(t.desc)}</span></span></a>`;
             }).join("")}</div>
@@ -118,7 +171,7 @@
 
         <aside class="home-side" aria-label="Your week">
           ${revisitCard}
-          ${remList}
+          ${healthSide}
           <section class="side-sec jr" aria-labelledby="jr-h"><div class="side-head"><h2 class="side-h" id="jr-h">Journal</h2><a class="link" href="#/journal">Open journal</a></div>
             <p class="jr-q">${esc(LO.journalPrompts[new Date().getDate() % LO.journalPrompts.length])}</p>
             <button class="btn outline" type="button" data-act="capture" data-mode="journal">${LO.icon("edit", 18)}Write an entry</button></section>
@@ -139,15 +192,28 @@
     root.addEventListener("change", (e) => {
       const c = e.target.closest("[data-rem]");
       if (c) completeReminder(c.dataset.rem, c.checked);
+      const p = e.target.closest("[data-pri]");
+      if (p) resolvePriority(p.dataset.pri, p.checked);
     });
     if (LO.state.clipboardOffer && !sessionStorage.getItem("lo.clipoffer") && LO.parseHash().q.clip === "1") {
       sessionStorage.setItem("lo.clipoffer", "1");
       LO.toast("A link is on your clipboard.", { icon: "link", duration: 8000, action: { label: "Save it", fn: () => LO.quickSave(LO.samples.youtube.url) } });
     }
-    const off = LO.on("items", () => { const rail = $("#recentRail"); if (!rail) return; const recents = LO.state.items.filter((i) => i.sourceType !== "journal" || i.processing).slice().sort((a, b) => b.createdAt - a.createdAt).slice(0, 8); rail.innerHTML = recents.map(recentCard).join(""); });
+    const off = LO.on("items", () => { const rail = $("#recentRail"); if (!rail) return; const recents = LO.state.items.filter(isRecent).slice().sort((a, b) => b.createdAt - a.createdAt).slice(0, 8); rail.innerHTML = recents.map(recentCard).join(""); });
     LO.onLeave(off);
   }
   LO.completeReminder = completeReminder;
+  /* A priority is either a reminder ("rem:id") or something waiting on a reply or callback ("item:id"). */
+  function resolvePriority(key, on) {
+    const [kind, id] = key.split(":");
+    if (kind === "rem") { completeReminder(id, on); return; }
+    const it = LO.item(id);
+    if (!it) return;
+    it.needsReply = !on; LO.save();
+    if (on) LO.toast("Marked done", { icon: "check", action: { label: "Undo", fn: () => { it.needsReply = true; LO.save(); LO.render(); } } });
+    setTimeout(() => { if (["home", "item", "library"].includes(LO.parseHash().name)) LO.render(); }, on ? 280 : 0);
+  }
+  LO.resolvePriority = resolvePriority;
   function completeReminder(id, on) {
     const r = LO.state.reminders.find((x) => x.id === id);
     if (!r) return;
@@ -158,8 +224,8 @@
   LO.routes.home = { render: homeHTML, mount: homeMount, title: () => "Home" };
 
   /* ================= LIBRARY + DETAIL ================= */
-  const LF = { all: () => true, articles: (i) => i.sourceType === "website", videos: (i) => ["youtube", "instagram"].includes(i.sourceType), voice: (i) => i.sourceType === "voice", journal: (i) => i.sourceType === "journal", ideas: (i) => i.sourceType === "text", chats: (i) => i.sourceType === "chat" };
-  const LFL = [["all", "All"], ["articles", "Articles"], ["videos", "Videos"], ["voice", "Voice notes"], ["journal", "Journal"], ["ideas", "Ideas"], ["chats", "AI chats"]];
+  const LF = { all: () => true, meetings: (i) => i.sourceType === "meeting", emails: (i) => i.sourceType === "email", calls: (i) => i.sourceType === "call", health: (i) => i.sourceType === "health", articles: (i) => i.sourceType === "website", videos: (i) => ["youtube", "instagram"].includes(i.sourceType), voice: (i) => i.sourceType === "voice", journal: (i) => i.sourceType === "journal", ideas: (i) => i.sourceType === "text", chats: (i) => i.sourceType === "chat" };
+  const LFL = [["all", "All"], ["meetings", "Meetings"], ["emails", "Emails"], ["calls", "Calls"], ["health", "Health"], ["articles", "Articles"], ["videos", "Videos"], ["voice", "Voice notes"], ["journal", "Journal"], ["ideas", "Ideas"], ["chats", "AI chats"]];
   const lib = { q: "", f: "all", s: "recent", view: "list", topic: "" };
   let editing = false;
 
@@ -168,7 +234,7 @@
       <span class="row-body">
         <span class="row-title">${it.processing ? "Organising\u2026" : LO.hl(it.title, q)}</span>
         <span class="row-sum">${it.processing ? esc(it.original.slice(0, 90)) : LO.hl(it.insight, q)}</span>
-        <span class="row-meta">${LO.srcGlyph(it.sourceType, 14)}<span>${esc(it.sourceName || "")}</span><span class="sep" aria-hidden="true"></span><span>${LO.timeAgo(it.createdAt)}</span>${it.isFavorite ? `<span class="row-fav" aria-label="Favourite">${LO.heart(true, 14)}</span>` : ""}</span>
+        <span class="row-meta">${LO.srcGlyph(it.sourceType, 14)}<span>${esc(it.sourceName || "")}</span><span class="sep" aria-hidden="true"></span><span>${LO.timeAgo(it.createdAt)}</span>${it.needsReply ? `<span class="pill warn">${it.sourceType === "call" ? "Call back" : "Reply needed"}</span>` : ""}${it.isFavorite ? `<span class="row-fav" aria-label="Favourite">${LO.heart(true, 14)}</span>` : ""}</span>
       </span></a>`;
   const gridHTML = (it, q, sel) => `<a class="gcard" href="#/item/${it.id}" ${sel ? 'aria-current="true"' : ""} data-tone="${LO.tone(it)}"><span class="gcard-art">${LO.art(it.art)}</span><span class="gcard-b"><span class="row-title">${LO.hl(it.title, q)}</span><span class="row-meta">${LO.srcGlyph(it.sourceType, 14)}<span>${LO.timeAgo(it.createdAt)}</span></span></span></a>`;
 
@@ -223,7 +289,7 @@
       $("#libCount", root).textContent = r.n + (r.n === 1 ? " item" : " items");
       $$("[data-lib-f]", root).forEach((b) => b.setAttribute("aria-checked", b.dataset.libF === lib.f));
       $$("[data-lib-v]", root).forEach((b) => b.setAttribute("aria-checked", b.dataset.libV === lib.view));
-      const u = new URLSearchParams(); if (lib.q) u.set("q", lib.q); if (lib.topic) u.set("topic", lib.topic);
+      const u = new URLSearchParams(); if (lib.q) u.set("q", lib.q); if (lib.topic) u.set("topic", lib.topic); if (lib.f !== "all") u.set("f", lib.f);
       if (!selId) history.replaceState(null, "", "#/library" + (u.toString() ? "?" + u : ""));
     };
     $("#libSearch", root).addEventListener("submit", (e) => e.preventDefault());
@@ -246,11 +312,21 @@
   LO.routes.library = {
     title: () => "Library",
     render(args, q) {
-      lib.q = q.q || ""; lib.topic = q.topic || ""; if (q.f) lib.f = q.f; editing = false;
+      lib.q = q.q || ""; lib.topic = q.topic || ""; lib.f = LF[q.f] ? q.f : "all"; editing = false;
       return libraryShell(null, "");
     },
     mount(root, args, q) { libMount(root, null); if (q.focus === "1") $("#libQ").focus(); }
   };
+
+  /* Context line for life items: when, who, how much, and whether something is owed. */
+  function factsHTML(it) {
+    const f = [];
+    if (it.startsAt) f.push(`${LO.icon("calendar", 16)}<span>${new Date(it.startsAt).toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short" })}, ${clock(it.startsAt)} to ${clock(it.endsAt)}</span>`);
+    if ((it.people || []).length) f.push(`${LO.icon("user", 16)}<span>${esc(it.people.join(", "))}</span>`);
+    if (it.metric) f.push(`${LO.icon("pulse", 16)}<span>${esc(it.metric.value)} of ${esc(it.metric.goal)}</span>`);
+    if (it.needsReply) f.push(`<span class="pill warn">${it.sourceType === "call" ? "Call back needed" : "Reply needed"}</span>`);
+    return f.length ? `<ul class="facts" aria-label="Details">${f.map((x) => `<li>${x}</li>`).join("")}</ul>` : "";
+  }
 
   /* ---------- knowledge detail ---------- */
   function detailHTML(it, pane) {
@@ -265,9 +341,11 @@
         <p class="det-src">${LO.srcGlyph(it.sourceType, 16)}<span>${it.sourceUrl ? `<a href="${esc(it.sourceUrl)}" data-d="open-original" rel="noopener">${esc(it.sourceName)}</a>` : esc(it.sourceName || LO.sourceMeta[it.sourceType].label)}</span><span class="sep" aria-hidden="true"></span><span>${esc(it.meta || "")}</span><span class="sep" aria-hidden="true"></span><span>Saved ${LO.timeAgo(it.createdAt)}</span></p>
         ${ed ? `<label class="vh" for="dTitle">Title</label><input id="dTitle" class="field det-title-in" value="${esc(it.title)}" />` : `<h1 class="det-title" id="dTitle">${esc(it.title)}</h1>`}
         <p class="det-insight">${esc(it.insight)}</p>
+        ${factsHTML(it)}
       </header>
       <div class="det-actions" role="toolbar" aria-label="Item actions">
         ${ed ? `<button class="btn primary" type="button" data-d="save">${LO.icon("check", 18)}Save changes</button><button class="btn outline" type="button" data-d="cancel">Cancel</button>` : `
+        ${it.needsReply ? `<button class="btn primary" type="button" data-d="resolve">${LO.icon("check", 18)}<span>Mark as done</span></button>` : ""}
         <button class="btn outline" type="button" data-d="fav" aria-pressed="${!!it.isFavorite}">${LO.heart(!!it.isFavorite, 18)}<span>${it.isFavorite ? "Favourited" : "Favourite"}</span></button>
         <button class="btn outline" type="button" data-d="share">${LO.icon("share", 18)}<span>Share</span></button>
         <a class="btn outline" href="#/infographic/${it.id}">${LO.icon("infographic", 18)}<span>Infographic</span></a>
@@ -300,6 +378,7 @@
       else if (k === "save") { it.title = $("#dTitle").value.trim() || it.title; it.summary = $("#dSum").value.trim() || it.summary; editing = false; LO.save(); repaint(); LO.toast("Changes saved", { duration: 1800 }); LO.emit("items"); }
       else if (k === "ask") LO.askQuestion(`What connects to \u201C${it.title}\u201D in my notes?`);
       else if (k === "remind") remindDialog(it);
+      else if (k === "resolve") LO.resolvePriority("item:" + it.id, true);
       else if (k === "open-original") { e.preventDefault(); LO.toast(`In the app this opens ${it.sourceName} in a new tab. Links are simulated in the prototype.`, { icon: "external", duration: 4500 }); }
     });
   }
@@ -422,8 +501,14 @@
           </div></section>
         <section class="set-sec" aria-labelledby="s-cp"><h2 class="sec-h" id="s-cp">Capture</h2>
           <div class="set-card">
+            <a class="set-row link" href="#/onboarding"><div class="set-t"><p class="set-l">Replay the welcome tour</p><p class="set-d">A short walk-through of capturing, saving from anywhere and choosing your topics.</p></div>${LO.icon("chevR", 20)}</a>
             <a class="set-row link" href="#/welcome"><div class="set-t"><p class="set-l">Capture from anywhere</p><p class="set-d">Install the app, share from your phone, add the Chrome extension.</p></div>${LO.icon("chevR", 20)}</a>
             ${sw("swClip", "Offer to save copied links", "When you open Life OS with a link on your clipboard, offer to save it.", s.clipboardOffer)}
+          </div></section>
+        <section class="set-sec" aria-labelledby="s-cn"><h2 class="sec-h" id="s-cn">Connections</h2>
+          <div class="set-card">
+            ${[["calendar", "calendar", "Calendar", "Meetings and appointments show up in Today."], ["mail", "email", "Email", "Messages waiting on a reply become priorities."], ["call", "calls", "Calls", "Call logs and voicemails are saved with a summary."], ["pulse", "health", "Health", "Sleep, steps and appointments appear as a quiet strip."]].map(([ic, k, l, d]) => `<div class="set-row"><div class="set-t"><p class="set-l">${LO.icon(ic, 18)} ${l}</p><p class="set-d">${d}</p></div><button class="btn outline" type="button" data-connect="${k}">Connect</button></div>`).join("")}
+            <p class="set-d set-note">Connections stay off the main screens. The prototype shows sample data; the real app asks you to sign in to each source and only reads what you allow.</p>
           </div></section>
         <section class="set-sec" aria-labelledby="s-dt"><h2 class="sec-h" id="s-dt">Your data</h2>
           <div class="set-card">
@@ -443,6 +528,8 @@
       root.addEventListener("click", (e) => {
         const t = e.target.closest("[data-pick]");
         if (t) { LO.setTheme(t.dataset.pick); $$("[data-pick]", root).forEach((x) => x.setAttribute("aria-checked", x === t)); return; }
+        const cn = e.target.closest("[data-connect]");
+        if (cn) { LO.toast(`In the app this signs you in to ${cn.dataset.connect}. The prototype already shows sample ${cn.dataset.connect} data.`, { icon: "link", duration: 5000 }); return; }
         const sw = e.target.closest(".switch");
         if (sw) { const on = sw.getAttribute("aria-checked") !== "true"; sw.setAttribute("aria-checked", on); if (sw.id === "swMotion") { LO.state.reduceMotion = on; LO.save(); LO.applyTheme(); } if (sw.id === "swClip") { LO.state.clipboardOffer = on; LO.save(); } }
       });

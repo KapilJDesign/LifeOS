@@ -69,10 +69,10 @@
     return `<div class="turn"><p class="q"><span class="vh">You asked: </span>${esc(t.q)}</p><div class="ans" data-tone="violet"><span class="ans-mark" aria-hidden="true">${LO.icon("spark", 16)}</span><div class="ans-body">${body}</div></div></div>`;
   }
   function introHTML() {
-    const sugg = [...LO.askSeed.map((s) => s.q), "What should I revisit this week?"];
+    const sugg = LO.askSeed.slice(0, 6).map((s) => s.q);
     return `<div class="chat-intro"><div class="intro-art" data-tone="violet">${LO.art("chat")}</div>
-      <h2 class="intro-h">Ask your knowledge</h2>
-      <p class="intro-p">Get one consolidated answer from everything you have saved, with numbered sources that open the original note.</p>
+      <h2 class="intro-h">Ask your second brain</h2>
+      <p class="intro-p">Get one consolidated answer from your notes, meetings, emails, calls and health, with numbered sources that open the original.</p>
       <ul class="sugg">${sugg.map((q) => `<li><button class="sugg-b" type="button" data-c="ask" data-q="${esc(q)}">${LO.icon("spark", 18)}<span>${esc(q)}</span></button></li>`).join("")}</ul></div>`;
   }
   function threadHTML() { return A.thread.length ? A.thread.map(turnHTML).join("") : introHTML(); }
@@ -83,7 +83,7 @@
       <div class="chat-thread" role="log" aria-live="polite" aria-relevant="additions" tabindex="-1">${threadHTML()}</div>
       <form class="composer" data-c-form>
         <label class="vh" for="cq-${ctx}">Ask a question about your saved items</label>
-        <textarea id="cq-${ctx}" class="cq" rows="1" placeholder="Ask anything you have saved" enterkeyhint="send"></textarea>
+        <textarea id="cq-${ctx}" class="cq" rows="1" placeholder="Ask about a meeting, email, call or note" enterkeyhint="send"></textarea>
         <button class="iconbtn" type="button" data-c="mic" aria-label="Dictate a question">${LO.icon("mic", 22)}</button>
         <button class="btn primary send" type="submit" aria-label="Send">${LO.icon("arrowU", 20)}</button>
       </form>

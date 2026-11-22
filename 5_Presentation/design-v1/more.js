@@ -175,6 +175,7 @@
   const tabList = (name, label, list, def) => `<div class="tablist" role="tablist" aria-label="${label}" data-tabs="${name}">${list.map(([id, l, ic]) => `<button class="tab" role="tab" type="button" id="${name}-${id}" data-tab="${id}" aria-selected="${id === def}" tabindex="${id === def ? 0 : -1}" aria-controls="${name}-p-${id}">${ic ? LO.icon(ic, 18) : ""}<span>${l}</span></button>`).join("")}</div>`;
   const panel = (name, id, def, html) => `<div class="tabpanel" role="tabpanel" id="${name}-p-${id}" aria-labelledby="${name}-${id}" data-panel-of="${name}" data-panel="${id}" ${id === def ? "" : "hidden"} tabindex="0">${html}</div>`;
   const steps = (arr) => `<ol class="steps">${arr.map((s) => `<li>${s}</li>`).join("")}</ol>`;
+  LO.ui = { tabs, tabList, panel, steps };
 
   /* ================= WELCOME: install + capture everywhere ================= */
   LO.routes.welcome = {

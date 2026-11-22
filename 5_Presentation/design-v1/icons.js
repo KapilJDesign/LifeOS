@@ -56,6 +56,9 @@
     globe: '<circle cx="12" cy="12" r="8.2"/><path d="M3.8 12h16.4M12 3.8c2.3 2.3 3.4 5 3.4 8.2s-1.1 5.9-3.4 8.2c-2.3-2.3-3.4-5-3.4-8.2S9.7 6.1 12 3.8Z"/>', // Globe24Regular
     voice: '<path d="M5 10v4M8.5 7v10M12 4.5v15M15.5 8v8M19 10.5v3"/>', // Mic24Regular / waveform
     calendar: '<rect x="4" y="5.5" width="16" height="14" rx="2.6"/><path d="M4 10h16M8.5 3.5v3.5M15.5 3.5v3.5"/>', // Calendar24Regular
+    mail: '<rect x="3.5" y="5.5" width="17" height="13" rx="2.8"/><path d="m4.5 8 7.5 5.2L19.5 8"/>', // Mail24Regular
+    call: '<path d="M7.2 4.5h2.4l1.2 3.6-1.7 1.2a10.5 10.5 0 0 0 4.6 4.6l1.2-1.7 3.6 1.2v2.4a1.8 1.8 0 0 1-1.9 1.8A13.5 13.5 0 0 1 5.4 6.4a1.8 1.8 0 0 1 1.8-1.9Z"/>', // Call24Regular
+    pulse: '<path d="M3.5 12.5h4l2-5 3.5 10 2.5-6.5 1.5 1.5h3.5"/>', // HeartPulse24Regular
     tag: '<path d="M4 12.6V5.5a1 1 0 0 1 1-1h7.1l8 8-7.6 7.6Z"/><circle cx="8.6" cy="9" r="1" fill="currentColor"/>', // Tag24Regular
     reset: '<path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3L4.5 8.8"/><path d="M4.5 4.5v4.3h4.3"/>', // ArrowReset24Regular
     phone: '<rect x="7" y="3" width="10" height="18" rx="2.8"/><path d="M11 18h2"/>', // Phone24Regular
@@ -91,8 +94,15 @@
     text: { icon: "note", label: "Note" },
     voice: { icon: "voice", label: "Voice note" },
     journal: { icon: "journal", label: "Journal" },
-    chat: { icon: "chat", label: "AI chat" }
+    chat: { icon: "chat", label: "AI chat" },
+    meeting: { icon: "calendar", label: "Meeting" },
+    email: { icon: "mail", label: "Email" },
+    call: { icon: "call", label: "Call" },
+    health: { icon: "pulse", label: "Health" }
   };
+  /* Life types: things that happen in your day, as opposed to things you save to learn from. */
+  LO.lifeTypes = ["meeting", "email", "call", "health"];
+  LO.isLife = (it) => LO.lifeTypes.includes(it && it.sourceType);
   LO.srcGlyph = function (type, size) {
     const m = LO.sourceMeta[type] || LO.sourceMeta.text;
     return `<span class="srcglyph" data-src="${type}" title="${m.label}">${LO.icon(m.icon, size || 16)}</span>`;

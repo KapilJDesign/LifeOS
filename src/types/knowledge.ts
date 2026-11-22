@@ -18,7 +18,11 @@ export type SourceType =
   | "website"
   | "podcast"
   | "journal"
-  | "chat";
+  | "chat"
+  | "meeting"
+  | "email"
+  | "call"
+  | "health";
 
 /** What kind of thing the item is, independent of where it came from. */
 export type ContentKind =
@@ -31,7 +35,11 @@ export type ContentKind =
   | "voice_note"
   | "journal"
   | "conversation"
-  | "link";
+  | "link"
+  | "meeting"
+  | "email"
+  | "call"
+  | "health";
 
 /** Icon-lookup key produced by the URL detector. */
 export type PlatformKey =
@@ -51,7 +59,11 @@ export type PlatformKey =
   | "text"
   | "voice"
   | "journal"
-  | "chat";
+  | "chat"
+  | "calendar"
+  | "email"
+  | "phone"
+  | "health";
 
 /** Where an item entered the inbox. */
 export type CaptureOrigin =
@@ -113,8 +125,22 @@ export interface KnowledgeItem {
   origin: CaptureOrigin;
   review: ReviewState;
   processing?: ProcessingInfo;
+  /** Life items (meeting, email, call, health) only. They share the same pipeline as saved knowledge. */
+  life?: LifeDetails;
 }
 
+/** Day-to-day context carried by meetings, emails, calls and health entries. */
+export interface LifeDetails {
+  /** Start and end of a meeting or appointment. */
+  startsAt?: string;
+  endsAt?: string;
+  people?: string[];
+  /** An email or missed call that is waiting on the user. Cleared when the user marks it done. */
+  needsReply?: boolean;
+  priority?: "high" | "normal";
+  /** Health readings such as sleep or steps. `fraction` is progress toward the goal, 0..1. */
+  metric?: { label: string; value: string; goal: string; fraction: number };
+}
 export interface KnowledgeConcept {
   id: string;
   name: string;

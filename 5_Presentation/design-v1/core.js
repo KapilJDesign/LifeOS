@@ -21,6 +21,22 @@
   LO.emit = (e, d) => (bus[e] || []).slice().forEach((f) => f(d));
 
   /* ---------------- state ---------------- */
+  /* Demo clock: seeded events are placed around "now" (clamped to 09:00-18:00) so Today always
+     has a realistic mix of done, next and later. Real events would come from a calendar connector. */
+  LO.slotTimes = function (slot, now) {
+    now = now || Date.now();
+    if (slot.days != null) {
+      const d = new Date(now); d.setDate(d.getDate() + slot.days); d.setHours(slot.hour, 0, 0, 0);
+      return { startsAt: d.getTime(), endsAt: d.getTime() + slot.dur * 60000 };
+    }
+    const lo = new Date(now); lo.setHours(9, 0, 0, 0);
+    const hi = new Date(now); hi.setHours(18, 0, 0, 0);
+    const anchor = Math.min(Math.max(now, lo.getTime()), hi.getTime());
+    const step = 5 * 60000;
+    const startsAt = Math.round((anchor + slot.at * 60000) / step) * step;
+    return { startsAt, endsAt: startsAt + slot.dur * 60000 };
+  };
+
   const KEY = "lifeos.proto.v1";
   function seedState() {
     const now = Date.now();
@@ -29,8 +45,10 @@
       reduceMotion: false,
       clipboardOffer: true,
       welcomed: false,
+      interests: [],
       bannerDismissed: false,
-      items: LO.seedItems.map((i) => Object.assign({}, i, { createdAt: now - i.ago, processing: false, isFavorite: LO.seedFavorites.includes(i.id) })),
+      lifeSeeded: true,
+      items: LO.seedItems.map((i) => Object.assign({}, i, { createdAt: now - (i.ago != null ? i.ago : 2 * 3600e3), processing: false, isFavorite: LO.seedFavorites.includes(i.id) }, i.slot ? LO.slotTimes(i.slot, now) : {})),
       extraConcepts: [],
       deck: LO.seedDeck.slice(),
       seen: Object.fromEntries(Object.entries(LO.seedSeen).map(([id, v]) => [id, { n: v[0], at: now - v[1] * 3600e3 }])),
@@ -42,7 +60,20 @@
   function load() {
     try {
       const raw = localStorage.getItem(KEY);
-      if (raw) return Object.assign(seedState(), JSON.parse(raw));
+      if (raw) {
+        const st = Object.assign(seedState(), JSON.parse(raw));
+        if (!JSON.parse(raw).lifeSeeded) {
+          /* Saved before meetings, emails, calls and health existed: add the new seeds once. */
+          const fresh = seedState();
+          const have = new Set(st.items.map((i) => i.id));
+          fresh.items.forEach((i) => { if (!have.has(i.id)) st.items.push(i); });
+          const haveR = new Set(st.reminders.map((r) => r.id));
+          fresh.reminders.forEach((r) => { if (!haveR.has(r.id)) st.reminders.push(r); });
+          st.lifeSeeded = true;
+        }
+        st.items.forEach((i) => { if (i.slot) Object.assign(i, LO.slotTimes(i.slot)); });
+        return st;
+      }
     } catch (e) {}
     return seedState();
   }
@@ -54,8 +85,10 @@
     } catch (e) {}
   };
   LO.reset = function () {
+    const keep = LO.state && LO.state.welcomed;
     try { localStorage.removeItem(KEY); } catch (e) {}
     LO.state = seedState();
+    LO.state.welcomed = !!keep;
     LO.save();
   };
 
@@ -72,6 +105,62 @@
       .sort((a, b) => b.s - a.s || b.o.createdAt - a.o.createdAt)
       .slice(0, n || 3)
       .map((x) => x.o);
+  };
+
+  /* ---------------- Today: schedule + priorities, derived from items and reminders ---------------- */
+  LO.dueWhy = function (ts) {
+    const label = LO.dueLabel(ts);
+    if (label === "Overdue") return "Overdue";
+    if (/^Today, /.test(label)) return "Due today, " + label.slice(7);
+    return "Due " + label.charAt(0).toLowerCase() + label.slice(1);
+  };
+  LO.today = function () {
+    const now = Date.now();
+    const s = LO.state;
+    const sod = new Date(now); sod.setHours(0, 0, 0, 0);
+    const eod = sod.getTime() + 864e5;
+    const items = s.items.filter((i) => !i.processing);
+
+    const schedule = items
+      .filter((i) => i.startsAt >= sod.getTime() && i.startsAt < eod)
+      .sort((a, b) => a.startsAt - b.startsAt)
+      .map((item) => ({ item, state: item.endsAt <= now ? "done" : item.startsAt <= now ? "now" : "later" }));
+    const nextUp = schedule.find((e) => e.state === "later");
+    if (nextUp) nextUp.state = "next";
+
+    /* Priorities: open reminders plus anything waiting on a reply, ranked. Knowledge reminders rank below life ones. */
+    const tracked = new Set(s.reminders.filter((r) => !r.completed && r.sourceItemId).map((r) => r.sourceItemId));
+    const priorities = [];
+    s.reminders.filter((r) => !r.completed).forEach((r) => {
+      const src = r.sourceItemId ? LO.item(r.sourceItemId) : null;
+      const hrs = (r.dueAt - now) / 36e5;
+      let score = hrs < 0 ? 95 : hrs < 24 ? Math.max(40, 90 - hrs * 8) : hrs < 72 ? 30 : 10;
+      if (src && !LO.isLife(src)) score -= 25;
+      priorities.push({ key: "rem:" + r.id, kind: "reminder", title: r.title, src, score, why: LO.dueWhy(r.dueAt) });
+    });
+    items.filter((i) => i.needsReply && !tracked.has(i.id)).forEach((i) => {
+      const who = (i.people || [])[0] || "";
+      const call = i.sourceType === "call";
+      const days = Math.max(0, (now - i.createdAt) / 864e5);
+      priorities.push({
+        key: "item:" + i.id, kind: call ? "callback" : "reply", src: i,
+        title: call ? "Call back " + who : "Reply to " + who + ": " + i.title.replace(/^Re:\s*/, ""),
+        score: 55 + Math.min(days, 3) * 5 + (i.priority === "high" ? 15 : 0),
+        why: (call ? "Missed " : "Received ") + LO.timeAgo(i.createdAt).toLowerCase()
+      });
+    });
+    priorities.sort((a, b) => b.score - a.score);
+    /* Far-off reminders from saved reading stay in Reminders; Today only lists what needs attention soon. */
+    const urgent = priorities.filter((p) => p.score >= 30);
+
+    const health = items.filter((i) => i.sourceType === "health" && i.metric).sort((a, b) => b.createdAt - a.createdAt);
+    const appointment = items.filter((i) => i.sourceType === "health" && i.startsAt > now).sort((a, b) => a.startsAt - b.startsAt)[0] || null;
+    return {
+      schedule, priorities: urgent, top: urgent.slice(0, 3), more: urgent.slice(3),
+      left: schedule.filter((e) => e.state !== "done").length,
+      owed: items.filter((i) => i.needsReply).length,
+      health, appointment
+    };
   };
 
   /* ---------------- time ---------------- */
@@ -308,6 +397,15 @@
     return { url, host, type, sample: type === "youtube" ? LO.samples.youtube : type === "instagram" ? LO.samples.instagram : /quality-notes\.example/.test(host) ? LO.samples.website : null };
   };
   LO.looksLikeChat = (t) => /(^|\n)\s*(you|user|human|me|chatgpt|assistant|gemini|claude|ai)\s*(said)?\s*:/i.test(t || "") && (t || "").split("\n").length >= 2;
+  /* Pasted or dictated text that is really an email, meeting, call or health note. */
+  LO.detectLife = function (text) {
+    const t = text || "";
+    if (/(^|\n)\s*(from|subject)\s*:/i.test(t)) return { type: "email", name: "Email", meta: "Email", tag: "Email", reply: /\b(please (reply|confirm|let me know)|can you|could you|let me know|by (today|tomorrow|eod|end of day))\b/i.test(t) };
+    if (/\b(missed call|voicemail|call (with|from)|spoke (to|with)|on the call)\b/i.test(t)) return { type: "call", name: "Phone", meta: "Call", tag: "Call", reply: /\b(missed call|call (me )?back)\b/i.test(t) };
+    if (/\b(meeting|minutes|attendees|agenda|1:1|stand-?up)\b/i.test(t)) return { type: "meeting", name: "Meeting notes", meta: "Meeting", tag: "Meeting", reply: false };
+    if (/\b(slept|sleep|steps|workout|blood pressure|dentist|doctor|medicine|gym)\b/i.test(t)) return { type: "health", name: "Health", meta: "Health note", tag: "Health", reply: false };
+    return null;
+  };
   LO.mockProcess = function (inp) {
     const text = (inp.text || "").trim();
     let base;
@@ -335,6 +433,14 @@
         meta: inp.type === "voice" ? "Voice note" : inp.type === "chat" ? sentences(text).length + " turns" : inp.type === "journal" ? "Journal entry" : inp.url ? "Link" : "Idea"
       };
       if (!base.tags.length) base.tags = ["Idea"];
+      const life = !inp.url && !["chat", "journal"].includes(inp.type) ? LO.detectLife(text) : null;
+      if (life) {
+        Object.assign(base, { sourceType: life.type, sourceName: life.name, meta: life.meta, tags: Array.from(new Set([life.tag].concat(base.tags))).slice(0, 4) });
+        if (life.reply) base.needsReply = true;
+        base.tags = base.tags.filter((g) => g !== "Idea");
+        const subject = life.type === "email" && text.match(/^\s*subject\s*:\s*(.+)$/im);
+        if (subject) base.title = clip(subject[1].trim(), 64);
+      }
     }
     base.cids = (base.concepts || []).map((n) => {
       const c = LO.allConcepts().find((x) => x.name.toLowerCase() === n.toLowerCase() || (x.short || "").toLowerCase() === n.toLowerCase());
@@ -379,6 +485,7 @@
         title: out.title, insight: out.insight, summary: out.summary, takeaways: out.takeaways, tags: out.tags, actions: out.actions, topic: out.topic, art: out.art,
         cids: out.cids.concat(concepts), meta: out.meta, sourceName: out.sourceName || item.sourceName, sourceType: out.sourceType || item.sourceType, processing: false
       });
+      if (out.needsReply) item.needsReply = true;
       if (out.sample && !item.sourceUrl) item.sourceUrl = out.url;
       LO.save();
       LO.emit("items");
@@ -403,6 +510,7 @@
     cleanups.forEach((f) => { try { f(); } catch (e) {} });
     cleanups = [];
     const r = LO.parseHash();
+    if (r.name === "home" && !LO.state.welcomed && LO.routes.onboarding) { location.replace("#/onboarding"); return; }
     const def = LO.routes[r.name] || LO.routes.home;
     LO.route = r;
     document.body.dataset.route = def === LO.routes[r.name] ? r.name : "home";
@@ -423,7 +531,7 @@
 
   /* ---------------- shell ---------------- */
   LO.navItems = [
-    { id: "home", label: "Home", icon: "home" },
+    { id: "home", label: "Today", icon: "home" },
     { id: "explore", label: "Explore", icon: "explore" },
     { id: "capture", label: "Capture", icon: "plus", action: "capture" },
     { id: "graph", label: "Graph", icon: "graph" },
@@ -434,11 +542,11 @@
     const side = $("#sidebar");
     const dueCount = LO.state.reminders.filter((r) => !r.completed).length;
     side.innerHTML = `
-      <a class="sb-brand" href="#/home" aria-label="Life OS, home">${LO.mark(32)}<span class="sb-word">Life OS</span></a>
+      <a class="sb-brand" href="#/home" aria-label="Life OS, your second brain, home">${LO.mark(32)}<span class="sb-word">Life OS<small class="sb-tag">Your second brain</small></span></a>
       <button class="btn primary sb-capture" type="button" data-act="capture">${LO.icon("plus", 20)}<span class="sb-label">Capture</span><kbd class="kbd sb-kbd">${LO.modKey} K</kbd></button>
       <nav class="sb-nav" aria-label="Primary">
         ${["home", "explore", "graph", "library", "ask"].map((id) => {
-          const n = { home: ["Home", "home"], explore: ["Explore", "explore"], graph: ["Graph", "graph"], library: ["Library", "library"], ask: ["Ask", "ask"] }[id];
+          const n = { home: ["Today", "home"], explore: ["Explore", "explore"], graph: ["Graph", "graph"], library: ["Library", "library"], ask: ["Ask", "ask"] }[id];
           return `<a class="sb-link" href="#/${id}" data-nav="${id}">${LO.icon(n[1], 22)}<span class="sb-label">${n[0]}</span></a>`;
         }).join("")}
       </nav>

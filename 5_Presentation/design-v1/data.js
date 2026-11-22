@@ -27,7 +27,9 @@
     { id: "automation", name: "Automation", topic: "biz", x: 500, y: 480, desc: "Turning repeated work into flows that run themselves." },
     { id: "saas", name: "Future of SaaS", topic: "biz", x: 640, y: 550, desc: "How agents change what software is worth and how it is priced." },
     { id: "knowsys", name: "Knowledge Systems", topic: "pk", x: 290, y: 570, desc: "How a personal system captures, connects and returns what you learn." },
-    { id: "reflection", name: "Reflection", topic: "pk", x: 130, y: 580, desc: "Regular looking-back that turns experience into lessons." }
+    { id: "reflection", name: "Reflection", topic: "pk", x: 130, y: 580, desc: "Regular looking-back that turns experience into lessons." },
+    { id: "pricing", name: "Pricing & Quotes", topic: "biz", x: 780, y: 470, desc: "Proposals, vendor quotes and the pricing decisions behind them." },
+    { id: "wellbeing", name: "Wellbeing", topic: "pk", x: 90, y: 470, desc: "Sleep, movement and appointments that keep energy steady." }
   ];
   LO.conceptById = (id) => LO.concepts.find((c) => c.id === id);
 
@@ -45,7 +47,9 @@
     { s: "research", t: "quality", r: "supports" },
     { s: "knowsys", t: "context", r: "inspired_by" },
     { s: "knowsys", t: "reflection", r: "related" },
-    { s: "knowsys", t: "saas", r: "related" }
+    { s: "knowsys", t: "saas", r: "related" },
+    { s: "pricing", t: "saas", r: "related" },
+    { s: "wellbeing", t: "reflection", r: "related" }
   ];
   LO.relLabel = { related: "Related to", part_of: "Part of", supports: "Supports", inspired_by: "Inspired by" };
 
@@ -195,6 +199,119 @@
       cids: ["knowsys", "context"], tags: ["Idea", "Knowledge", "Product"],
       original: "Principles: 1) capture in under five seconds. 2) the system organises, I do not. 3) things come back to me. 4) links over folders.",
       actions: []
+    },
+
+    /* ---- Life items: meetings, calls, emails and health use the same item shape and the same pipeline.
+       ext fields: slot (schedule, relative to the demo clock), people, needsReply, priority, metric. ---- */
+    {
+      id: "m01", title: "Design review: the Today view", topic: "design", sourceType: "meeting", sourceName: "Teams", sourceUrl: "", meta: "45 min meeting", art: "design", slot: { at: -150, dur: 45 },
+      people: ["Priya Nair", "Dan Wu"],
+      insight: "Lead the day with the next meeting and no more than three priorities.",
+      summary: "Reviewed the first Today view. The group agreed the day should open with the next meeting and cap priorities at three, with health and email kept as quiet secondary strips instead of new tabs. Dan will check the density at phone width before Friday.",
+      takeaways: ["Lead with the next meeting, then three priorities.", "Health and email stay secondary and never get their own tab.", "Check the layout at 390 px before Friday."],
+      cids: ["dsys", "quality", "aidesign"], tags: ["Meeting", "Design review"],
+      original: "Notes typed during the call. Priya: three priorities is the right cap. Dan: health strip should be one line on phones. Agreed: nothing new in the bottom nav. Action: Dan checks density at 390 px.",
+      actions: ["Check the Today view density at 390 px"]
+    },
+    {
+      id: "m02", title: "1:1 with Priya", topic: "design", sourceType: "meeting", sourceName: "Teams", sourceUrl: "", meta: "30 min meeting", art: "research", slot: { at: 40, dur: 30 },
+      people: ["Priya Nair"],
+      insight: "Bring the demo scope, feedback on the Explore cards and the Today prototype.",
+      summary: "Agenda: hackathon demo scope, feedback on the Explore cards and the plan for next sprint. Last time you agreed to share the Today prototype before this call, and Priya wanted to talk about how research fits the demo.",
+      takeaways: ["Agree the demo scope for Friday.", "Ask for feedback on the Explore cards.", "Share the Today prototype before the call."],
+      cids: ["research", "quality"], tags: ["Meeting", "1:1"],
+      original: "Calendar invite: 1:1 with Priya Nair. Agenda: demo scope; Explore card feedback; next sprint. Notes from last time: share the Today prototype beforehand.",
+      actions: []
+    },
+    {
+      id: "m03", title: "Hackathon demo dry run", topic: "biz", sourceType: "meeting", sourceName: "Teams", sourceUrl: "", meta: "45 min meeting", art: "automation", slot: { at: 190, dur: 45 },
+      people: ["Dan Wu", "Sana Rao", "Priya Nair"],
+      insight: "Run the demo end to end once and time every step.",
+      summary: "A full run of the five-minute demo: capture, understand, connect, ask, share. The goal is to find where it drags and where the story needs a stronger opening line.",
+      takeaways: ["Time each step of the demo.", "Open with the capture moment.", "Keep a fallback if the network fails."],
+      cids: ["automation", "knowsys"], tags: ["Meeting", "Demo"],
+      original: "Calendar invite: Hackathon demo dry run. Bring the laptop and the phone. Dan runs the clock.",
+      actions: []
+    },
+    {
+      id: "c01", title: "Call with Arjun: vendor quote", topic: "biz", sourceType: "call", sourceName: "Phone", sourceUrl: "", meta: "12 min call", art: "saas", ago: 22 * H,
+      people: ["Arjun Rao"],
+      insight: "The price holds until Friday if you confirm in writing.",
+      summary: "Discussed the revised vendor quote. Arjun can hold the current price until Friday if the order is confirmed in writing. You agreed to send the revised quote with the new quantities, and he will share the delivery schedule.",
+      takeaways: ["The price holds until Friday if confirmed in writing.", "You owe him the revised quote with the new quantities.", "He will send the delivery schedule."],
+      cids: ["pricing", "automation"], tags: ["Call", "Vendor", "Pricing"],
+      original: "Call notes. Arjun: I can hold the price until Friday if I have it in writing. Me: I will send the revised quote with the new quantities today. Arjun: and I will send the delivery schedule.",
+      actions: ["Send Arjun the revised quote"]
+    },
+    {
+      id: "c02", title: "Missed call: Dr. Mehta's clinic", topic: "pk", sourceType: "call", sourceName: "Phone", sourceUrl: "", meta: "Missed call, voicemail", art: "voice", ago: 5 * H,
+      people: ["Dr. Mehta's clinic"], needsReply: true, priority: "high",
+      insight: "The clinic wants you to confirm or move your check-up before they close at 6 pm.",
+      summary: "A missed call with a voicemail: the clinic asks you to confirm or move your check-up in three days. They close at 6 pm today, so a call back this afternoon is the easy way to settle it.",
+      takeaways: ["Confirm or move the check-up.", "The clinic closes at 6 pm."],
+      cids: ["wellbeing"], tags: ["Call", "Health", "Appointment"],
+      original: "Voicemail transcript: Hello, this is Dr. Mehta's clinic. We are calling to confirm your check-up. If the time does not suit you, please call us back before six this evening and we will move it.",
+      actions: ["Call the clinic back before 6 pm"]
+    },
+    {
+      id: "e01", title: "Re: Q4 pricing proposal", topic: "biz", sourceType: "email", sourceName: "Outlook", sourceUrl: "", meta: "Email from Sana Rao", art: "saas", ago: 26 * H,
+      people: ["Sana Rao"], needsReply: true, priority: "high",
+      insight: "Sana needs a decision on the tiered option by the end of today.",
+      summary: "Sana asks which of the two pricing options you prefer and whether the pilot discount applies to annual plans. She needs an answer today to finish the proposal for her leadership review.",
+      takeaways: ["Choose between the tiered and the flat option.", "Confirm whether the pilot discount covers annual plans.", "Reply by the end of today."],
+      cids: ["pricing", "saas"], tags: ["Email", "Pricing"],
+      original: "From: Sana Rao\nSubject: Re: Q4 pricing proposal\n\nHi Kapil, thanks for the notes. Can you tell me which option you prefer, tiered or flat? Also, does the pilot discount apply to annual plans? I need to lock this today for the leadership review.\n\nSana",
+      actions: ["Reply to Sana with the pricing decision"]
+    },
+    {
+      id: "e02", title: "Demo slides for Friday", topic: "biz", sourceType: "email", sourceName: "Outlook", sourceUrl: "", meta: "Email from Dan Wu", art: "automation", ago: 3 * H,
+      people: ["Dan Wu"], needsReply: true,
+      insight: "Dan wants a thumbs-up on the slide outline.",
+      summary: "Dan shared a five-slide outline for the demo and asks whether the story should open with capture or with the knowledge graph. A short reply unblocks his work this afternoon.",
+      takeaways: ["Pick the opening: capture or graph.", "Approve the five-slide outline."],
+      cids: ["knowsys", "automation"], tags: ["Email", "Demo"],
+      original: "From: Dan Wu\nSubject: Demo slides for Friday\n\nOutline attached. Five slides. Should we open with capture or with the graph? Tell me and I will lock it.\n\nDan",
+      actions: []
+    },
+    {
+      id: "e03", title: "Invoice 2291 received", topic: "biz", sourceType: "email", sourceName: "Outlook", sourceUrl: "", meta: "Email from Accounts", art: "saas", ago: 8 * 24 * H,
+      people: ["Accounts"],
+      insight: "Nothing to do; filed for reference.",
+      summary: "Invoice 2291 for the design tooling subscription arrived and was filed. No reply is needed.",
+      takeaways: ["No reply needed.", "Filed for the quarter-end review."],
+      cids: ["pricing"], tags: ["Email", "Invoice"],
+      original: "From: Accounts\nSubject: Invoice 2291\n\nPlease find invoice 2291 attached. No action needed if already approved.",
+      actions: []
+    },
+    {
+      id: "h01", title: "Sleep: 6 h 40 min", topic: "pk", sourceType: "health", sourceName: "Health", sourceUrl: "", meta: "Last night", art: "journal", ago: 9 * H,
+      metric: { label: "Sleep", value: "6 h 40 min", goal: "7 h", pct: 0.95 },
+      insight: "Twenty minutes under your goal. Aim for an earlier night.",
+      summary: "Sleep last night was 6 h 40 min, 20 minutes under your 7 h goal. Your last three nights average 6 h 55 min. A short night tends to show up as lower energy by mid-afternoon.",
+      takeaways: ["Twenty minutes under the goal.", "Three-night average: 6 h 55 min.", "Aim for lights out by 10:30 pm tonight."],
+      cids: ["wellbeing", "reflection"], tags: ["Health", "Sleep"],
+      original: "Health sync: sleep 6 h 40 min, in bed 11:20 pm, awake 6:00 am. Goal 7 h.",
+      actions: []
+    },
+    {
+      id: "h02", title: "Steps: 4,200 of 8,000", topic: "pk", sourceType: "health", sourceName: "Health", sourceUrl: "", meta: "So far today", art: "network", ago: 1 * H,
+      metric: { label: "Steps", value: "4,200", goal: "8,000", pct: 0.525 },
+      insight: "About halfway; a twenty-minute walk closes most of the gap.",
+      summary: "You are at 4,200 steps, a little over half of the 8,000 goal. A twenty-minute walk adds roughly 2,000 steps.",
+      takeaways: ["Halfway to the goal.", "A twenty-minute walk adds about 2,000 steps."],
+      cids: ["wellbeing"], tags: ["Health", "Movement"],
+      original: "Health sync: steps 4,200. Goal 8,000.",
+      actions: []
+    },
+    {
+      id: "h03", title: "Dental check-up with Dr. Mehta", topic: "pk", sourceType: "health", sourceName: "Calendar", sourceUrl: "", meta: "Appointment", art: "journal", slot: { days: 3, hour: 16, dur: 45 },
+      people: ["Dr. Mehta"],
+      insight: "Routine check-up. The clinic is waiting for you to confirm.",
+      summary: "A routine dental check-up. The clinic called to confirm and left a voicemail, so the slot is not final until you reply.",
+      takeaways: ["Routine check-up, 45 minutes.", "Not final until you confirm with the clinic."],
+      cids: ["wellbeing"], tags: ["Health", "Appointment"],
+      original: "Calendar: Dental check-up, Dr. Mehta, 45 minutes.",
+      actions: []
     }
   ];
 
@@ -212,7 +329,9 @@
     { id: "r2", title: "Read the MCP overview", dueIn: 20, sourceItemId: "i02", done: false },
     { id: "r3", title: "Audit our token naming against the design-systems article", dueIn: 8 * 24, sourceItemId: "i06", done: false },
     { id: "r4", title: "Sketch the weekly question card", dueIn: 5 * 24, sourceItemId: "i12", done: false },
-    { id: "r5", title: "Record a voice note about onboarding", dueIn: -26, sourceItemId: "", done: true }
+    { id: "r5", title: "Record a voice note about onboarding", dueIn: -26, sourceItemId: "", done: true },
+    { id: "r6", title: "Send Arjun the revised quote", dueIn: 1.5, sourceItemId: "c01", done: false },
+    { id: "r7", title: "Share the Today prototype with Priya", dueIn: 0.4, sourceItemId: "m02", done: false }
   ];
 
   LO.journalPrompts = ["What did I learn today?", "What gave me energy?", "What am I avoiding?", "One thing to remember from this week"];
@@ -257,6 +376,38 @@
   /* Ask: seeded questions with consolidated answers and citations.
      Segments are strings or { c: itemId } citation markers. */
   LO.askSeed = [
+    {
+      q: "What do I need to do today?",
+      paras: [
+        ["Three things are time-sensitive. You promised Arjun the revised quote on yesterday\u2019s call, and his price only holds until Friday if you confirm in writing ", { c: "c01" }, ". Sana is also waiting on a pricing decision for her leadership review ", { c: "e01" }, "."],
+        ["Before your 1:1 with Priya, share the Today prototype, which is the one thing you agreed to last time ", { c: "m02" }, ". Dr. Mehta\u2019s clinic left a voicemail and closes at 6 pm, so a call back this afternoon settles your check-up ", { c: "c02" }, "."]
+      ],
+      followups: ["What did I agree with Arjun on the call?", "How have I been sleeping?"]
+    },
+    {
+      q: "What did I agree with Arjun on the call?",
+      paras: [
+        ["Two commitments, one each way. You will send the revised quote with the new quantities, and Arjun will send the delivery schedule ", { c: "c01" }, ". He can hold the current price until Friday, but only if the order is confirmed in writing."],
+        ["It connects to the pricing thread with Sana, who needs to know whether the tiered or the flat option applies ", { c: "e01" }, ", and to your notes on pricing by outcome rather than by seat ", { c: "i10" }, "."]
+      ],
+      followups: ["What do I need to do today?", "What were my ideas about building a SaaS?"]
+    },
+    {
+      q: "How have I been sleeping?",
+      paras: [
+        ["Slightly short. Last night was 6 h 40 min, twenty minutes under your 7 h goal, and your last three nights average 6 h 55 min ", { c: "h01" }, ". Movement is on track for the afternoon but not finished: about half of today\u2019s steps are done ", { c: "h02" }, "."],
+        ["Your own reflection points the same way: fewer inputs and more time with the good ones ", { c: "i15" }, ". An earlier night is the simplest change."]
+      ],
+      followups: ["What do I need to do today?", "What should I revisit this week?"]
+    },
+    {
+      q: "What did we decide in the design review?",
+      paras: [
+        ["Keep the Today view calm: lead with the next meeting, cap priorities at three and keep health and email as quiet secondary strips, with nothing new in the bottom nav ", { c: "m01" }, "."],
+        ["That fits your own reading on quality, where polish is a scheduled habit and not an afterthought ", { c: "i08" }, ", and on tokens as contracts so the layout stays consistent across breakpoints ", { c: "i06" }, "."]
+      ],
+      followups: ["What have I learned about design systems?", "What do I need to do today?"]
+    },
     {
       q: "What did I save about AI agents?",
       paras: [

@@ -11,7 +11,7 @@ export default defineConfig({
       manifest: {
         name: "Life OS",
         short_name: "Life OS",
-        description: "Capture anything. Let AI organise it. Explore, ask and share what you know.",
+        description: "Your second brain. Capture anything, from a link to a meeting. Let AI organise it, then see your day, explore, ask and share.",
         id: "/",
         start_url: "/",
         scope: "/",

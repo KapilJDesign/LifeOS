@@ -13,7 +13,7 @@ Everything stated as "verified" was checked either by the test suite in this rep
 
 ### 1.1 What Life OS does
 
-Life OS is a personal knowledge app. A user captures anything (a thought, a link, a voice note, a pasted AI conversation) from wherever they are. The app structures the item with AI-style processing, connects it to what the user already knows in a knowledge graph, and brings it back through swipeable cards, search, and a chat that answers in consolidated prose with citations to the user's own saved items.
+Life OS is a personal second brain. A user captures anything (a thought, a link, a voice note, a pasted AI conversation) from wherever they are, and the same pipeline also holds the things that happen in a day: meetings, emails, calls and health entries. The app structures each item with AI-style processing, connects it to what the user already knows in a knowledge graph, and brings it back through a Today view, swipeable cards, search, and a chat that answers in consolidated prose with citations to the user's own items.
 
 The product is used mainly on a phone in the browser, installable as a PWA, with a richer desktop web layout. It is one responsive codebase.
 
@@ -140,6 +140,7 @@ LifeOS/
       share/share.ts            Web Share API with clipboard fallback; payload builders
       discovery.ts              Today's Discovery, Explore deck order, revisit tracking, progress, history
       reminders.ts              Due-date phrase parsing, suggestions from actions
+      today.ts                  Today view: day schedule (done, now, next, later) and ranked priorities from reminders and replies owed
       storage/                  Repository port, IndexedDB + memory adapters, migrations, seed, settings
     services/
       types.ts                  The service interfaces screens call (section 5)
@@ -240,7 +241,8 @@ erDiagram
 
 | Entity | Brief | Now | Reason |
 |---|---|---|---|
-| `KnowledgeItem.sourceType` | text, voice, instagram, youtube, website, journal, chat | adds `podcast` | The brief's capture list includes podcasts |
+| `KnowledgeItem.sourceType` | text, voice, instagram, youtube, website, journal, chat | adds `podcast`, and the life types `meeting`, `email`, `call`, `health` | The brief's capture list includes podcasts. Life types make the app a second brain for the day, not only for reading |
+| `KnowledgeItem.life` | not present | optional `LifeDetails`: `startsAt`, `endsAt`, `people`, `needsReply`, `priority`, `metric` | Meetings, emails, calls and health entries share the item pipeline. `lib/today.ts` builds the Today view from them. `needsReply` is cleared when the user marks the item done |
 | `KnowledgeItem.contentKind` | not present | note, idea, video, reel, article, podcast, voice_note, journal, conversation, link | Content type is independent of where it came from. Powers the Library filters (Articles, Videos, Voice notes, Journal, Ideas) |
 | `KnowledgeItem.platform` | not present | icon key (youtube, instagram, tiktok, x, linkedin, reddit, github, medium, substack, spotify, apple-podcasts, podcast, website, text, voice, journal, chat) | The brief asks the app to "show its platform icon" |
 | `KnowledgeItem.concepts` | concept names | concept ids (slugs) | Joins are exact; renaming a concept does not orphan items. `KnowledgeConcept.itemIds` is the inverse index, recomputed from items |
