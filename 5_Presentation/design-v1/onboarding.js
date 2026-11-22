@@ -270,7 +270,7 @@
   const rankT = (r) => (r === 0 ? "translate(0,0) scale(1)" : r === 1 ? "translate(0, 3.4cqmin) scale(.95)" : r === 2 ? "translate(0, 6.6cqmin) scale(.9)" : "translate(0, 9cqmin) scale(.86)");
   const S6 = {
     html: () => `<div class="sc sc6">
-      <div class="deck" id="o6deck">${DECK.map((c, i) => `<div class="kc" data-i="${i}" data-tone="${c.tone}" style="transform:${rankT(i)};z-index:${9 - i};opacity:${i > 2 ? 0 : 1}"><span class="kc-art">${art(c.a)}</span><span class="kc-b"><span class="kc-top"><span class="fc t">${c.topic}</span><span class="kc-src">${gl(c.s)}<span>${c.n}</span></span></span><span class="kc-t">${esc(c.t)}</span><span class="kc-i">${esc(c.i)}</span></span><span class="kc-heart">${LO.icon("heart", 15)}</span></div>`).join("")}</div>
+      <div class="ob-deck" id="o6deck">${DECK.map((c, i) => `<div class="kc" data-i="${i}" data-tone="${c.tone}" style="transform:${rankT(i)};z-index:${9 - i};opacity:${i > 2 ? 0 : 1}"><span class="kc-art">${art(c.a)}</span><span class="kc-b"><span class="kc-top"><span class="fc t">${c.topic}</span><span class="kc-src">${gl(c.s)}<span>${c.n}</span></span></span><span class="kc-t">${esc(c.t)}</span><span class="kc-i">${esc(c.i)}</span></span><span class="kc-heart">${LO.icon("heart", 15)}</span></div>`).join("")}</div>
       <div class="prog6"><span class="pg-l"><b id="o6n">3</b> of 12 revisited</span><span class="pg-bars">${Array.from({ length: 12 }, (_, i) => `<i class="${i < 3 ? "on" : ""}"></i>`).join("")}</span></div>
       <span class="back6" id="o6back" aria-hidden="true">${LO.icon("undo", 14)}Back</span>
     </div>`,

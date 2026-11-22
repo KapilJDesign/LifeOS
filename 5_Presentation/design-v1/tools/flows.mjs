@@ -1,5 +1,6 @@
 // End-to-end interaction checks for the clickable prototype. Fails loudly on any broken control.
 import { chromium } from "playwright-core";
+import { readFileSync } from "node:fs";
 const BASE = process.env.BASE || "http://127.0.0.1:8791/index.html";
 const browser = await chromium.launch({ channel: "chrome" });
 let fails = 0;
@@ -225,6 +226,40 @@ await p.context().close();
   ok(finished, "onboarding: reduced motion shows the finished picture and plays nothing");
   ok(rp.errs.length === 0, "onboarding: reduced motion has no errors");
   await ctx.close();
+}
+/* ---------------- layout regressions ---------------- */
+/* Explore: the card fills the stage, nothing is clipped, and the stacked cards stay clear of the action buttons. */
+for (const [w, h] of [[390, 844], [360, 640], [1440, 900]]) {
+  const rp = await fresh({ width: w, height: h }, "#/explore");
+  const m = await rp.evaluate(() => {
+    const r = (sel) => document.querySelector(sel).getBoundingClientRect();
+    const body = document.querySelector(".kcard.top .kcard-body");
+    return { deck: r(".deck").height, stage: r(".xp-stage").height, clip: body.scrollHeight - body.clientHeight, thirdBottom: r(".kcard.third").bottom, actionsTop: r(".xp-actions").top };
+  });
+  ok(m.deck / m.stage >= 0.6, `explore ${w}x${h}: card fills the stage (${Math.round(m.deck)} of ${Math.round(m.stage)}px)`);
+  ok(m.clip <= 1, `explore ${w}x${h}: card content is not clipped`);
+  ok(m.thirdBottom <= m.actionsTop - 1, `explore ${w}x${h}: stacked cards do not overlap the action buttons`);
+  await rp.context().close();
+}
+/* Onboarding CSS must never restyle a class the app already uses (it once overrode .deck and broke Explore). */
+{
+  const dir = new URL("../", import.meta.url);
+  const strip = (t) => t.replace(/\/\*[\s\S]*?\*\//g, "").replace(/url\([^)]*\)/g, "");
+  const sels = (f) => [...strip(readFileSync(new URL(f, dir), "utf8")).matchAll(/([^{}]+)\{/g)].flatMap((m) => m[1].split(",").map((x) => x.trim()));
+  const appCls = new Set(["app.css", "screens.css"].flatMap(sels).flatMap((x) => [...x.matchAll(/\.([\w-]+)/g)].map((m) => m[1])));
+  const leaks = sels("onboarding.css").filter((x) => /^\.[\w-]+$/.test(x) && appCls.has(x.slice(1)));
+  ok(leaks.length === 0, "onboarding.css: no bare class selector reuses an app class " + leaks.join(", "));
+}
+/* Onboarding never scrolls sideways on the narrowest phone. */
+{
+  const rp = await fresh({ width: 320, height: 568 }, "#/onboarding?step=0", { firstRun: true });
+  const wide = [];
+  for (let i = 0; i < 8; i++) {
+    await rp.goto(BASE + "#/onboarding?step=" + i); await rp.waitForTimeout(500);
+    if (await rp.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth > 1)) wide.push(i + 1);
+  }
+  ok(wide.length === 0, "onboarding: no sideways scroll at 320px" + (wide.length ? " (steps " + wide.join(", ") + ")" : ""));
+  await rp.context().close();
 }
 await browser.close();
 
